@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Model;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Activity extends Model
+{
+    protected $table= 'activity';
+
+    public function activity_file()
+    {
+        return $this->hasMany(ActivityFile::class,'activity_id');
+
+
+
+    }
+}
