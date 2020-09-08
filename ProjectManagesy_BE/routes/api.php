@@ -19,5 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/activity', 'ActivityManagementController@storeActivity'); //สร้าง activity
+Route::post('/activity/edit', 'ActivityManagementController@editActivity'); //edit activity
 
-Route::get('/activity', 'ActivityManagementController@indexActivity'); //ดู Activity
+Route::get('/activity', 'ActivityManagementController@indexAllActivity'); //ดู Activity
+Route::get('/activity/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Activity

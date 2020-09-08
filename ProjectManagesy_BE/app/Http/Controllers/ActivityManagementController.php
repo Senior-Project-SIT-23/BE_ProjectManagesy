@@ -19,13 +19,27 @@ class ActivityManagementController extends Controller
     {
         $data = $request->all();
         $this->activity->createActivity($data);
-        
+
         return response()->json('สำเร็จ', 200);
     }
 
-    public function indexActivity()
+    public function indexAllActivity()
     {
         $activity = $this->activity->getAllActivity();
         return response()->json($activity, 200);
+    }
+
+    public function indexActivity($activity_id)
+    {
+        $activity = $this->activity->getActivityById($activity_id);
+        return response()->json($activity, 200);
+    }
+
+    public function editActivity(Request $request)
+    {
+        $data = $request->all();
+        $this->activity->editActivity($data);
+        return response()->json('สำเร็จ', 200);
+
     }
 }
