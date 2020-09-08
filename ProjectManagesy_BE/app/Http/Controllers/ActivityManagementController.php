@@ -19,6 +19,7 @@ class ActivityManagementController extends Controller
     {
         $data = $request->all();
         $this->activity->createActivity($data);
+        
         return response()->json('สำเร็จ', 200);
     }
 
