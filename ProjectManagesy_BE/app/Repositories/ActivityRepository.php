@@ -18,10 +18,10 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->save();
 
         foreach ($data['activity_file'] as $value) {
-            if($value){
+            if ($value) {
                 $temp_activity = Activity::where('activity_name', $data['activity_name'])->first();
                 $activity_id = $temp_activity->activity_id;
-    
+
                 $temp_name = $value->getClientOriginalName();
                 $name = pathinfo($temp_name, PATHINFO_FILENAME);
                 $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
@@ -41,7 +41,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function getAllActivity()
     {
         $activity = Activity::all();
-        // $activity = Activity::join('activity_file','activity_file.activity_id','=','activity.activity_id')->get();
+        
         return $activity;
     }
 
@@ -67,13 +67,15 @@ class ActivityRepository implements ActivityRepositoryInterface
 
         foreach ($data['delete_activity_file_id'] as $value) {
             $activity = ActivityFile::where('activity_file_id', $value)->first();
-            $activity_name = $activity->keep_file_name;
-            ActivityFile::where('activity_file_id', $value)->delete();
-            unlink(storage_path('app/activity/' . $activity_name));
+            if ($activity) {
+                $activity_name = $activity->keep_file_name;
+                ActivityFile::where('activity_file_id', $value)->delete();
+                unlink(storage_path('app/activity/' . $activity_name));
+            }
         }
 
         foreach ($data['new_activity_file'] as $value) {
-            if($value){
+            if ($value) {
                 $temp_name = $value->getClientOriginalName();
                 $name = pathinfo($temp_name, PATHINFO_FILENAME);
                 $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
