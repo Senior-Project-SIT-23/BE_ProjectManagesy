@@ -8,4 +8,5 @@ interface ActivityRepositoryInterface
     public function getAllActivity();
     public function getActivityById($activity_id);
     public function editActivity($data);
+    public function deleteActivity($data);
 }

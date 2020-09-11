@@ -41,7 +41,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function getAllActivity()
     {
         $activity = Activity::all();
-        $activity = Activity::join('activity_file','activity_file.activity_id','=','activity.activity_id')->get();
+        $activity = Activity::join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->get();
         return $activity;
     }
 
@@ -65,14 +65,6 @@ class ActivityRepository implements ActivityRepositoryInterface
             'activity.activity_major' => $data['activity_major']
         ]);
 
-        foreach ($data['delete_activity_file_id'] as $value) {
-            $activity = ActivityFile::where('activity_file_id', $value)->first();
-            if ($activity) {
-                $activity_name = $activity->keep_file_name;
-                ActivityFile::where('activity_file_id', $value)->delete();
-                unlink(storage_path('app/activity/' . $activity_name));
-            }
-        }
 
         foreach ($data['new_activity_file'] as $value) {
             if ($value) {
@@ -89,6 +81,30 @@ class ActivityRepository implements ActivityRepositoryInterface
                 $activity_file->save();
             }
         }
+    }
+
+    public function deleteActivity($data)
+    {
+        foreach ($data['activity_id'] as $value) {
+            $activity_file = ActivityFile::where('activity_id', $value)->get();
+         
+            Activity::where('activity_id', $value)->delete();
+            ActivityFile::where('activity_id', $value)->delete();
+          
+            foreach ($activity_file as $value) {
+                $file_name = $value->keep_file_name;
+                unlink(storage_path('app/activity/' . $file_name));
+            }
+        }
+
+        // foreach ($data['delete_activity_file_id'] as $value) {
+        //     $activity = ActivityFile::where('activity_file_id', $value)->first();
+        //     if ($activity) {
+        //         $activity_name = $activity->keep_file_name;
+        //         ActivityFile::where('activity_file_id', $value)->delete();
+        //         unlink(storage_path('app/activity/' . $activity_name));
+        //     }
+        // }
     }
 
 
