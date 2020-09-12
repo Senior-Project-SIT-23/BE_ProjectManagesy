@@ -49,6 +49,17 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         return $admission;
     }
 
+    public function getAdmissionById($admission_id){
+        $admission = Admission::where('admission_id', $admission_id)->first();
+
+        $attachment = Admission::where('admission.admission_id', $admission_id)->join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->get();
+        $admission->$attachment = $attachment;
+        return $admission;
+
+    }
+
+
+
     
 
     public function incrementalHash($len = 5)
