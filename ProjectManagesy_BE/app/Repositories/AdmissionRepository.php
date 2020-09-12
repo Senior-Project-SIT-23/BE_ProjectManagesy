@@ -43,6 +43,12 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         }
     }
 
+    public function getAllAdmission(){
+        $admission = Admission::all();
+        $admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->orderBy("admission.created_at", "desc")->get();
+        return $admission;
+    }
+
     
 
     public function incrementalHash($len = 5)

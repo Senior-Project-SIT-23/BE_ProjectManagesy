@@ -40,11 +40,11 @@ class AdmissionManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-    // public function indexAllAdmission()
-    // {
-    //     $admission = $this->admission->getAllAdmission();
-    //     return response()->json('สำเร็จ', 200);
-    // }
+    public function indexAllAdmission()
+    {
+        $admission = $this->admission->getAllAdmission();
+        return response()->json('สำเร็จ', 200);
+    }
 
 
 

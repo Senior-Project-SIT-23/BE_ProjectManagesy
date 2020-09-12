@@ -93,7 +93,8 @@ class ActivityRepository implements ActivityRepositoryInterface
 
     public function deleteActivity($data)
     {
-        foreach ($data['activity_id'] as $value) {
+        $activity_id = explode(',', $data['activity_id'][0]);
+        foreach ($activity_id as $value) {
             $activity_file = ActivityFile::where('activity_id', $value)->get();
          
             Activity::where('activity_id', $value)->delete();
