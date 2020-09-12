@@ -12,10 +12,9 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Repositories\ActivityRepositoryInterface',
             'App\Repositories\ActivityRepository'
         );
-        // $this->app->bind(
-        //     'App\Repositories\...RepositoryInterface',
-        //     'App\Repositories\...Repository'
-        // );
-
-}
+        $this->app->bind(
+            'App\Repositories\AdmissionRepositoryInterface',
+            'App\Repositories\AdmissionRepository'
+        );
+    }
 }

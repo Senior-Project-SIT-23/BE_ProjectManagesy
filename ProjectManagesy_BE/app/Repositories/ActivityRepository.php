@@ -97,14 +97,14 @@ class ActivityRepository implements ActivityRepositoryInterface
             }
         }
 
-        // foreach ($data['delete_activity_file_id'] as $value) {
-        //     $activity = ActivityFile::where('activity_file_id', $value)->first();
-        //     if ($activity) {
-        //         $activity_name = $activity->keep_file_name;
-        //         ActivityFile::where('activity_file_id', $value)->delete();
-        //         unlink(storage_path('app/activity/' . $activity_name));
-        //     }
-        // }
+        foreach ($data['delete_activity_file_id'] as $value) {
+            $activity = ActivityFile::where('activity_file_id', $value)->first();
+            if ($activity) {
+                $activity_name = $activity->keep_file_name;
+                ActivityFile::where('activity_file_id', $value)->delete();
+                unlink(storage_path('app/activity/' . $activity_name));
+            }
+        }
     }
 
 

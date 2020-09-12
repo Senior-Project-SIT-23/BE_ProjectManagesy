@@ -66,5 +66,7 @@ class ActivityManagementController extends Controller
         $data = $request->all();
         $this->activity->deleteActivity($data);
         return response()->json('สำเร็จ', 200);
+
+        
     }
 }

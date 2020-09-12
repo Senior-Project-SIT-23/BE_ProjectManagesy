@@ -17,10 +17,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+//Activity
 Route::post('/activity', 'ActivityManagementController@storeActivity'); //สร้าง activity
 Route::post('/activity/edit', 'ActivityManagementController@editActivity'); //edit activity
 Route::post('/activity/delete', 'ActivityManagementController@deleteActivity'); // delete activity
 
 Route::get('/activity', 'ActivityManagementController@indexAllActivity'); //ดู Activity
-Route::get('/activity/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Activity
+Route::get('/activity/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Activity_id
+
+//Admission
+Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
+// Route::post('/admission/edit', 'ActivityManagementController@editActivity'); //edit admision
+// Route::post('/admission/delete', 'ActivityManagementController@deleteActivity'); // delete admission
+
+Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
+// //Route::get('/admission/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Admisssion_id
