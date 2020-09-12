@@ -46,8 +46,9 @@ class AdmissionManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-
-
-
-
+    public function indexAdmission($admission_id)
+    {
+        $admission = $this->admission->getAdmissionById($admission_id);
+        return response()->json('สำเร็จ', 200);
+    }
 }

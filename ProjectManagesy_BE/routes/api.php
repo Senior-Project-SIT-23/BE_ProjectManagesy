@@ -31,4 +31,4 @@ Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //ส
 // Route::post('/admission/delete', 'ActivityManagementController@deleteActivity'); // delete admission
 
 Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
-// //Route::get('/admission/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Admisssion_id
+Route::get('/admission/{activity_id}', 'ActivityManagementController@indexAdmission'); //ดู Admisssion_id
