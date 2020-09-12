@@ -64,7 +64,15 @@ class ActivityRepository implements ActivityRepositoryInterface
             'activity.activity_year' => $data['activity_year'],
             'activity.activity_major' => $data['activity_major']
         ]);
-
+        
+        foreach ($data['delete_activity_file_id'] as $value) {
+            $activity = ActivityFile::where('activity_file_id', $value)->first();
+            if ($activity) {
+                $activity_name = $activity->keep_file_name;
+                ActivityFile::where('activity_file_id', $value)->delete();
+                unlink(storage_path('app/activity/' . $activity_name));
+            }
+        }
 
         foreach ($data['new_activity_file'] as $value) {
             if ($value) {
