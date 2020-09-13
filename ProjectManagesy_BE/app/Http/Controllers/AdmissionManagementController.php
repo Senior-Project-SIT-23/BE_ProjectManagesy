@@ -51,4 +51,10 @@ class AdmissionManagementController extends Controller
         $admission = $this->admission->getAdmissionById($admission_id);
         return response()->json('สำเร็จ', 200);
     }
+    public function editAdmission(Request $request){
+        $data = $request->all();
+        $this->admission->editAdmission($data);
+        return response()->json('สำเร็จ', 200);
+
+    }
 }
