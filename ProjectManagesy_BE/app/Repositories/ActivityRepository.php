@@ -20,7 +20,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         foreach ($data['activity_file'] as $value) {
             if ($value) {
                 // $temp_activity = Activity::where('activity_name', $data['activity_name'])->first();
-                $activity_id =$activity->id;
+                $activity_id = $activity->id;
 
                 $temp_name = $value->getClientOriginalName();
                 $name = pathinfo($temp_name, PATHINFO_FILENAME);
@@ -42,6 +42,9 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         $activity = Activity::all();
         $activity = Activity::Leftjoin('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->orderBy("activity.created_at", "desc")->get();
+
+        // $activity = Activity::Leftjoin('activity_file','activity_file.activity_id','=','activity.activity_id')->get();
+
         return $activity;
     }
 
@@ -64,7 +67,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             'activity.activity_year' => $data['activity_year'],
             'activity.activity_major' => $data['activity_major']
         ]);
-        
+
         foreach ($data['delete_activity_file_id'] as $value) {
             $activity = ActivityFile::where('activity_file_id', $value)->first();
             if ($activity) {
@@ -96,22 +99,24 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity_id = explode(',', $data['activity_id'][0]);
         foreach ($activity_id as $value) {
             $activity_file = ActivityFile::where('activity_id', $value)->get();
-         
+
             Activity::where('activity_id', $value)->delete();
             ActivityFile::where('activity_id', $value)->delete();
-          
+
             foreach ($activity_file as $value) {
                 $file_name = $value->keep_file_name;
                 unlink(storage_path('app/activity/' . $file_name));
             }
         }
 
-        // foreach ($data['delete_activity_file_id'] as $value) {
-        //     $activity = ActivityFile::where('activity_file_id', $value)->first();
-        //     if ($activity) {
-        //         $activity_name = $activity->keep_file_name;
-        //         ActivityFile::where('activity_file_id', $value)->delete();
-        //         unlink(storage_path('app/activity/' . $activity_name));
+        //-----------------------------Bom
+        // foreach ($data['activity_id'] as $value) {
+        //     $activity_file = ActivityFile::where('activity_id', $value)->get();
+        //     Activity::where('activity_id', $value)->delete();
+        //     ActivityFile::where('activity_id', $value)->delete();
+        //     foreach ($activity_file as $value) {
+        //         $file_name = $value->keep_file_name;
+        //         unlink(storage_path('app/activity/' . $file_name));
         //     }
         // }
     }

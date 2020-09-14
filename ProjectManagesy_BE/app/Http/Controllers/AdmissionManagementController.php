@@ -43,7 +43,7 @@ class AdmissionManagementController extends Controller
     public function indexAllAdmission()
     {
         $admission = $this->admission->getAllAdmission();
-        return response()->json('สำเร็จ', 200);
+        return response()->json($admission, 200);
     }
 
     public function indexAdmission($admission_id)
@@ -51,10 +51,18 @@ class AdmissionManagementController extends Controller
         $admission = $this->admission->getAdmissionById($admission_id);
         return response()->json('สำเร็จ', 200);
     }
-    public function editAdmission(Request $request){
+    public function editAdmission(Request $request)
+    {
         $data = $request->all();
         $this->admission->editAdmission($data);
         return response()->json('สำเร็จ', 200);
-
     }
+
+    public function deleteAdmission(Request $request)
+    {
+        $data = $request->all();
+        $this->admission->deleteAdmission($data);
+        return response()->json('สำเร็จ', 200);
+    }
+    
 }

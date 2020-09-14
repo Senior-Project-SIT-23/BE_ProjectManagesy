@@ -46,7 +46,8 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     public function getAllAdmission()
     {
         $admission = Admission::all();
-        $admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->orderBy("admission.created_at", "desc")->get();
+        $admission = Admission::Leftjoin('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
+            ->orderBy("admission.created_at", "desc")->get();
         return $admission;
     }
 
@@ -65,7 +66,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         Admission::where('admission_id', $data['admission_id'])->update([
             'admission.admission_name' => $data['admission_name'],
             'admission.round_name' => $data['round_name'],
-            'admission.admission_major' => $data['admmission_major'],
+            'admission.admission_major' => $data['admission_major'],
             'admission.admission_year' => $data['admission_year']
         ]);
 
@@ -77,6 +78,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 unlink(storage_path('app/admission/' . $admission_name));
             }
         }
+
 
         foreach ($data['new_admission_file'] as $value) {
             if ($value) {
@@ -91,6 +93,23 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 $admission_file->keep_file_name = $custom_file_name;
                 $admission_file->admission_id = $data['admission_id'];
                 $admission_file->save();
+            }
+        }
+    }
+
+    public function deleteAdmission($data)
+    {
+        $admission_id = explode(',', $data['admission_id'][0]);
+
+        foreach ($admission_id as $value) {
+            $admission_file = AdmissionFile::where('admission_id', $value)->get();
+
+            Admission::where('admission_id', $value)->delete();
+            AdmissionFile::where('admission_id', $value)->delete();
+
+            foreach ($admission_file as $value) {
+                $file_name = $value->keep_file_name;
+                unlink(storage_path('app/admission/' . $file_name));
             }
         }
     }
