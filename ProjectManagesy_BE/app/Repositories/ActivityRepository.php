@@ -17,31 +17,30 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->activity_major = $data['activity_major'];
         $activity->save();
 
-        foreach ($data['activity_file'] as $value) {
-            if ($value) {
-                // $temp_activity = Activity::where('activity_name', $data['activity_name'])->first();
-                $activity_id = $activity->id;
-
-                $temp_name = $value->getClientOriginalName();
-                $name = pathinfo($temp_name, PATHINFO_FILENAME);
-                $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-                $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-                $path = $value->storeAs('/activity', $custom_file_name);
-                $activity_file = new ActivityFile();
-                $activity_file->activity_file_name = $temp_name;
-                $activity_file->activity_file = $path;
-                $activity_file->keep_file_name = $custom_file_name;
-                $activity_file->activity_id = $activity_id;
-                $activity_file->save();
-            }
-        }
+        $temp_activity = Activity::where('activity_name', $data['activity_name'])
+            ->where('activity_year', $data['activity_year'])
+            ->where('activity_major', $data['activity_major'])->first();
+        $activity_id = $temp_activity->activity_id;
+    
+        //บันทึกลง Activity file & เก็บไฟล์เข้าโฟลเดอร์ BE
+        $temp_name = $data['activity_file']->getClientOriginalName();
+        $name = pathinfo($temp_name, PATHINFO_FILENAME);
+        $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
+        $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
+        $path = $data['activity_file']->storeAs('/activity', $custom_file_name);
+        $activity_file = new ActivityFile();
+        $activity_file->activity_file_name = $temp_name;
+        $activity_file->activity_file = $path;
+        $activity_file->keep_file_name = $custom_file_name;
+        $activity_file->activity_id = $activity_id;
+        $activity_file->save();
     }
 
 
     public function getAllActivity()
     {
-        $activity = Activity::all();
-        $activity = Activity::Leftjoin('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->orderBy("activity.created_at", "desc")->get();
+        // $activity = Activity::all();
+        $activity = Activity::join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->get();
 
         // $activity = Activity::Leftjoin('activity_file','activity_file.activity_id','=','activity.activity_id')->get();
 

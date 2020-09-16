@@ -18,21 +18,22 @@ class AdmissionManagementController extends Controller
 
     public function storeAdmission(Request $request)
     {
-        // $messages = [
-        //     'required' => 'The :attribute field is required.',
-        // ];
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
 
-        // //ตรวจสอบข้อมูล
-        // $validator =  Validator::make($request->all(), [
-        //     'admission_name' => 'required',
-        //     'round_name' => 'required',
-        //     'activity_major' => 'required',
-        //     'activity_year' => 'required'
-        // ], $messages);
+        //ตรวจสอบข้อมูล
+        $validator =  Validator::make($request->all(), [
+            'admission_name' => 'required',
+            'round_name' => 'required',
+            'activity_major' => 'required',
+            'activity_year' => 'required',
+            'admission_file' => 'required'
+        ], $messages);
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 500);
-        // }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
 
         $data = $request->all();
         $this->admission->createAdmission($data);

@@ -28,7 +28,8 @@ class ActivityManagementController extends Controller
         $validator =  Validator::make($request->all(), [
             'activity_name' => 'required',
             'activity_year' => 'required',
-            'activity_major' => 'required'
+            'activity_major' => 'required',
+            'activity_file' => 'required'
         ], $messages);
 
         if ($validator->fails()) {
