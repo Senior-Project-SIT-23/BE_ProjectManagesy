@@ -26,8 +26,8 @@ class AdmissionManagementController extends Controller
         $validator =  Validator::make($request->all(), [
             'admission_name' => 'required',
             'round_name' => 'required',
-            'activity_major' => 'required',
-            'activity_year' => 'required',
+            'admission_major' => 'required',
+            'admission_year' => 'required',
             'admission_file' => 'required'
         ], $messages);
 

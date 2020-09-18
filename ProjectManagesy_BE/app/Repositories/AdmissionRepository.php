@@ -27,11 +27,11 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
         $admission_id = $temp_admission->admission_id;
 
-        $temp_name = $data['admission_name']->getClientOriginalName(); //เอาชื่อไฟล์ที่เก็บอยุ่ในvalueมาเก็บไว้ในtempname
+        $temp_name = $data['admission_file']->getClientOriginalName(); //เอาชื่อไฟล์ที่เก็บอยุ่ในvalueมาเก็บไว้ในtempname
         $name = pathinfo($temp_name, PATHINFO_FILENAME); //เก็บชื่อของไฟล์
         $extension = pathinfo($temp_name, PATHINFO_EXTENSION); //เก็บนามสกุล
         $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-        $path = $data['admission_name']->storeAs('/admission', $custom_file_name); // เก็บไว้ในไฟล์โฟลเดอร์ของbackend, /admission คือโฟลเดอร์ที่จะเก็บ สร้างauto
+        $path = $data['admission_file']->storeAs('/admission', $custom_file_name); // เก็บไว้ในไฟล์โฟลเดอร์ของbackend, /admission คือโฟลเดอร์ที่จะเก็บ สร้างauto
 
         $admission_file = new AdmissionFile();
         $admission_file->admission_file_name = $temp_name;
