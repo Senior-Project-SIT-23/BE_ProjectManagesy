@@ -21,7 +21,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             ->where('activity_year', $data['activity_year'])
             ->where('activity_major', $data['activity_major'])->first();
         $activity_id = $temp_activity->activity_id;
-    
+
         //บันทึกลง Activity file & เก็บไฟล์เข้าโฟลเดอร์ BE
         $temp_name = $data['activity_file']->getClientOriginalName();
         $name = pathinfo($temp_name, PATHINFO_FILENAME);
@@ -67,22 +67,23 @@ class ActivityRepository implements ActivityRepositoryInterface
             'activity.activity_major' => $data['activity_major']
         ]);
 
-        foreach ($data['delete_activity_file_id'] as $value) {
-            $activity = ActivityFile::where('activity_file_id', $value)->first();
-            if ($activity) {
-                $activity_name = $activity->keep_file_name;
-                ActivityFile::where('activity_file_id', $value)->delete();
-                unlink(storage_path('app/activity/' . $activity_name));
-            }
-        }
 
-        foreach ($data['new_activity_file'] as $value) {
-            if ($value) {
-                $temp_name = $value->getClientOriginalName();
+
+        $activity = ActivityFile::where('activity_file_id', $data['delete_activity_file_id'])->first();
+        if ($activity) {
+            $activity_name = $activity->keep_file_name;
+            ActivityFile::where('activity_file_id', $data['delete_activity_file_id'])->delete();
+            unlink(storage_path('app/activity/' . $activity_name));
+
+
+
+
+            if ($data['new_activity_file']) {
+                $temp_name = $data['new_activity_file']->getClientOriginalName();
                 $name = pathinfo($temp_name, PATHINFO_FILENAME);
                 $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
                 $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-                $path = $value->storeAs('/activity', $custom_file_name);
+                $path = $data['new_activity_file']->storeAs('/activity', $custom_file_name);
                 $activity_file = new ActivityFile();
                 $activity_file->activity_file_name = $temp_name;
                 $activity_file->activity_file = $path;
