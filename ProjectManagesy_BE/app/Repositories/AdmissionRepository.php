@@ -44,8 +44,8 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     public function getAllAdmission()
     {
         $admission = Admission::all();
-        $admission = Admission::Leftjoin('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
-            ->orderBy("admission.created_at", "desc")->get();
+        $admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
+            ->orderBy("admission.created_at", "asc")->get();
         return $admission;
     }
 
