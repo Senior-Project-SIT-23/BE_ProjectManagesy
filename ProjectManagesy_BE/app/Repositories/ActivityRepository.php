@@ -40,7 +40,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function getAllActivity()
     {
         // $activity = Activity::all();
-        $activity = Activity::join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->get();
+        $activity = Activity::join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->orderBy("activity.created_at", "asc")->get();
 
         // $activity = Activity::Leftjoin('activity_file','activity_file.activity_id','=','activity.activity_id')->get();
 
