@@ -15,7 +15,7 @@ class ActivityFile extends Migration
     {
         Schema::create('activity_file', function (Blueprint $table){
             $table->bigIncrements('activity_file_id');
-            $table->string('activity_file_name',45);
+            $table->string('activity_file_name',100);
             $table->string('activity_file',100);
             $table->string('keep_file_name',100);
             $table->bigInteger('activity_id')->unsigned();

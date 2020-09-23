@@ -15,9 +15,9 @@ class AdmissionFile extends Migration
     {
         Schema::create('admission_file', function (Blueprint $table){
             $table->bigIncrements('admission_file_id')->unsigned();
-            $table->string('admission_file_name',45);
-            $table->string('admission_file',45);
-            $table->string('keep_file_name',45);
+            $table->text('admission_file_name',100);
+            $table->string('admission_file',100);
+            $table->string('keep_file_name',100);
             $table->bigInteger('admission_id')->unsigned();
 
             $table->timestamps();

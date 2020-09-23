@@ -68,31 +68,50 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             'admission.admission_year' => $data['admission_year']
         ]);
 
-        
-            $admission = AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->first();
-            if ($admission) {
-                $admission_name = $admission->keep_file_name;
-                AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->delete();
-                unlink(storage_path('app/admission/' . $admission_name));
-            }
-        
+        if ($data['new_admission_file']) {
+            $admission_file = AdmissionFile::where('admission_id', $data['admission_id'])->first();
+            $keep_file_name = $admission_file->keep_file_name;
+            unlink(storage_path('app/admission/' . $keep_file_name));
+
+            $temp_name = $data['new_admission_file']->getClientOriginalName();
+            $name = pathinfo($temp_name, PATHINFO_FILENAME);
+            $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
+            $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
+            $path = $data['new_admission_file']->storeAs('/admission', $custom_file_name);
+
+            AdmissionFile::where('admission_id', $data['admission_id'])
+                ->update([
+                    'admission_file_name' => $temp_name,
+                    'admission_file' => $path,
+                    'keep_file_name' => $custom_file_name
+                ]);
+        }
 
 
-        
-            if ($data['new_admission_file']) {
-                $temp_name = $data['new_admission_file']->getClientOriginalName();
-                $name = pathinfo($temp_name, PATHINFO_FILENAME);
-                $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-                $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-                $path = $data['new_admission_file']->storeAs('/admission', $custom_file_name);
-                $admission_file = new AdmissionFile();
-                $admission_file->admission_file_name = $temp_name;
-                $admission_file->admission_file = $path;
-                $admission_file->keep_file_name = $custom_file_name;
-                $admission_file->admission_id = $data['admission_id'];
-                $admission_file->save();
-            }
-        
+        // $admission = AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->first();
+        // if ($admission) {
+        //     $admission_name = $admission->keep_file_name;
+        //     AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->delete();
+        //     unlink(storage_path('app/admission/' . $admission_name));
+        // }
+
+
+
+
+        // if ($data['new_admission_file']) {
+        //     $temp_name = $data['new_admission_file']->getClientOriginalName();
+        //     $name = pathinfo($temp_name, PATHINFO_FILENAME);
+        //     $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
+        //     $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
+        //     $path = $data['new_admission_file']->storeAs('/admission', $custom_file_name);
+        //     $admission_file = new AdmissionFile();
+        //     $admission_file->admission_file_name = $temp_name;
+        //     $admission_file->admission_file = $path;
+        //     $admission_file->keep_file_name = $custom_file_name;
+        //     $admission_file->admission_id = $data['admission_id'];
+        //     $admission_file->save();
+        // }
+
     }
 
     public function deleteAdmission($data)

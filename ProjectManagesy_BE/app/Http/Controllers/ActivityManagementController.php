@@ -59,7 +59,6 @@ class ActivityManagementController extends Controller
         $data = $request->all();
         $this->activity->editActivity($data);
         return response()->json('สำเร็จ', 200);
-
     }
 
     public function deleteActivity(Request $request)
@@ -67,7 +66,10 @@ class ActivityManagementController extends Controller
         $data = $request->all();
         $this->activity->deleteActivity($data);
         return response()->json('สำเร็จ', 200);
-
-        
     }
+
+    // public function indexSearchActivity()
+    // {
+    //     $activity = $this->activity
+    // }
 }

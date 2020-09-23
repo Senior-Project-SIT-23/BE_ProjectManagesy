@@ -67,58 +67,53 @@ class ActivityRepository implements ActivityRepositoryInterface
             'activity.activity_major' => $data['activity_major']
         ]);
 
-
-
-        $activity = ActivityFile::where('activity_file_id', $data['delete_activity_file_id'])->first();
-        if ($activity) {
-            $activity_name = $activity->keep_file_name;
-            ActivityFile::where('activity_file_id', $data['delete_activity_file_id'])->delete();
-            unlink(storage_path('app/activity/' . $activity_name));
-
-
-
-
-            if ($data['new_activity_file']) {
-                $temp_name = $data['new_activity_file']->getClientOriginalName();
-                $name = pathinfo($temp_name, PATHINFO_FILENAME);
-                $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-                $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-                $path = $data['new_activity_file']->storeAs('/activity', $custom_file_name);
-                $activity_file = new ActivityFile();
-                $activity_file->activity_file_name = $temp_name;
-                $activity_file->activity_file = $path;
-                $activity_file->keep_file_name = $custom_file_name;
-                $activity_file->activity_id = $data['activity_id'];
-                $activity_file->save();
-            }
+        if ($data['new_activity_file']) {
+            //Delete file in storage
+            $activity_file = ActivityFile::where('activity_id', $data['activity_id'])->first();
+            $keep_file_name = $activity_file->keep_file_name;
+            unlink(storage_path('app/activity/' . $keep_file_name));
+            //Create file in storage
+            $temp_name = $data['new_activity_file']->getClientOriginalName();
+            $name = pathinfo($temp_name, PATHINFO_FILENAME);
+            $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
+            $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
+            $path = $data['new_activity_file']->storeAs('/activity', $custom_file_name);
+            //Update Activity File in DB
+            ActivityFile::where('activity_id', $data['activity_id'])
+                ->update([
+                    'activity_file_name' => $temp_name,
+                    'activity_file' => $path,
+                    'keep_file_name' => $custom_file_name
+                ]);
         }
     }
 
     public function deleteActivity($data)
     {
-        $activity_id = explode(',', $data['activity_id'][0]);
-        foreach ($activity_id as $value) {
-            $activity_file = ActivityFile::where('activity_id', $value)->get();
-
-            Activity::where('activity_id', $value)->delete();
-            ActivityFile::where('activity_id', $value)->delete();
-
-            foreach ($activity_file as $value) {
-                $file_name = $value->keep_file_name;
-                unlink(storage_path('app/activity/' . $file_name));
-            }
-        }
-
-        //-----------------------------Bom
-        // foreach ($data['activity_id'] as $value) {
+        //--Pea--
+        // $activity_id = explode(',', $data['activity_id'][0]);
+        // foreach ($activity_id as $value) {
         //     $activity_file = ActivityFile::where('activity_id', $value)->get();
+
         //     Activity::where('activity_id', $value)->delete();
         //     ActivityFile::where('activity_id', $value)->delete();
+
         //     foreach ($activity_file as $value) {
         //         $file_name = $value->keep_file_name;
         //         unlink(storage_path('app/activity/' . $file_name));
         //     }
         // }
+
+        //-----------------------------Bom
+        foreach ($data['activity_id'] as $value) {
+            $activity_file = ActivityFile::where('activity_id', $value)->get();
+            Activity::where('activity_id', $value)->delete();
+            ActivityFile::where('activity_id', $value)->delete();
+            foreach ($activity_file as $value) {
+                $file_name = $value->keep_file_name;
+                unlink(storage_path('app/activity/' . $file_name));
+            }
+        }
     }
 
 

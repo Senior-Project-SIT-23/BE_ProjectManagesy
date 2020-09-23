@@ -24,6 +24,7 @@ Route::post('/activity/delete', 'ActivityManagementController@deleteActivity'); 
 
 Route::get('/activity', 'ActivityManagementController@indexAllActivity'); //ดู Activity
 Route::get('/activity/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Activity_id
+// Route::get('activity/search', 'ActivityManagementController@indexSearchActivity'); //search activity
 
 //Admission
 Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
