@@ -116,14 +116,24 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
     public function deleteAdmission($data)
     {
-        $admission_id = explode(',', $data['admission_id'][0]);
+        // $admission_id = explode(',', $data['admission_id'][0]);
 
-        foreach ($admission_id as $value) {
+        // foreach ($admission_id as $value) {
+        //     $admission_file = AdmissionFile::where('admission_id', $value)->get();
+
+        //     Admission::where('admission_id', $value)->delete();
+        //     AdmissionFile::where('admission_id', $value)->delete();
+
+        //     foreach ($admission_file as $value) {
+        //         $file_name = $value->keep_file_name;
+        //         unlink(storage_path('app/admission/' . $file_name));
+        //     }
+        // }
+
+        foreach ($data['admission_id'] as $value) {
             $admission_file = AdmissionFile::where('admission_id', $value)->get();
-
             Admission::where('admission_id', $value)->delete();
             AdmissionFile::where('admission_id', $value)->delete();
-
             foreach ($admission_file as $value) {
                 $file_name = $value->keep_file_name;
                 unlink(storage_path('app/admission/' . $file_name));
