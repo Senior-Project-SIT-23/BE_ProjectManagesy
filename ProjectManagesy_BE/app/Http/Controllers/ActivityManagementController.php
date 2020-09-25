@@ -68,8 +68,5 @@ class ActivityManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-    // public function indexSearchActivity()
-    // {
-    //     $activity = $this->activity
-    // }
+    
 }
