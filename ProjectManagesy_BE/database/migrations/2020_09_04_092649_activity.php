@@ -16,7 +16,7 @@ class Activity extends Migration
         Schema::create('activity', function (Blueprint $table){
             $table->bigIncrements('activity_id')->unsigned();
             $table->string('activity_name',45);
-            $table->string('activity_year',4);
+            $table->string('activity_year', 255)->change();
             $table->string('activity_major',45);
 
             $table->timestamps();
