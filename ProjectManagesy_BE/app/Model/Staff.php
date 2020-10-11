@@ -4,12 +4,13 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DataActivity extends Model
+class Staff extends Model
 {
-    protected $table= 'data_activity';
+    protected $table= 'user';
     // public function activity_file()
     // {
     //     return $this->hasMany(ActivityFile::class,'activity_id');
 
     // }
+
 }

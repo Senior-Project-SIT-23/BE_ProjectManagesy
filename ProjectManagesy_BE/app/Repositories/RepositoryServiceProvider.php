@@ -16,5 +16,9 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Repositories\AdmissionRepositoryInterface',
             'App\Repositories\AdmissionRepository'
         );
+        $this->app->bind(
+            'App\Repositories\LoginRepositoryInterface',
+            'App\Repositories\LoginRepository'
+        );
     }
 }
