@@ -16,11 +16,17 @@ class LoginRepository implements LoginRepositoryInterface
     {
         $staff = Staff::where('user_id', $data['user_id'])->first();
         if ($staff) {
-            Staff::where('user_id', $data['user_id'])->update(['user_name' => $data['name_th'], 'user_email' => $data['email']]);
+            Staff::where('user_id', $data['user_id'])
+                ->update([
+                    'user_name_th' => $data['name_th'],
+                    'user_name_en' => $data['name_en'],
+                    'user_email' => $data['email'],
+                ]);
         } else {
             $user = new Staff;
             $user->user_id = $data['user_id'];
-            $user->user_name = $data['name_th'];
+            $user->user_name_th = $data['name_th'];
+            $user->user_name_en = $data['name_en'];
             $user->user_email = $data['email'];
             $user->save();
         }

@@ -34,7 +34,7 @@ class LoginController extends Controller
         $data = $request->all();
 
         $auth_code = $data['auth_code'];
-        $cliend_id = env('CLIEND_ID');
+        $cliend_id = env('CLIENT_ID');
         $secrete_id = env('SECRETE_ID');
         $response = null;
 
@@ -43,7 +43,6 @@ class LoginController extends Controller
             // http://gatewayservice.sit.kmutt.ac.th/api/oauth/token?client_secret=b46Ivmua&client_id=IlNvm&code=SOn2MTlB1I
             $client = new Client(['base_uri' => $URL]);
             $response = $client->request('GET', $URL);
-
             if ($response->getStatusCode() == 200) {
                 $response = json_decode($response->getBody(), true);
             }
@@ -59,6 +58,7 @@ class LoginController extends Controller
             "token" => $response["token"]["token"],
             "user_id" => $response["user_id"],
             "user_type" => $response["user_type"],
+            "name_en" => $response["name_en"],
             "name" => $response["name_th"],
             "email" => $response["email"]
         );

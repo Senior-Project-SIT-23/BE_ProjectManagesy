@@ -15,7 +15,8 @@ class User extends Migration
     {
         Schema::create('user', function (Blueprint $table){
             $table->string('user_id')->primary();
-            $table->string('user_name',255)->nullable();
+            $table->string('user_name_th',255)->nullable();
+            $table->string('user_name_en',255)->nullable();
             $table->string('user_email',255)->nullable();
 
             $table->timestamps();
