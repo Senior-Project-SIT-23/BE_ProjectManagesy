@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\AdmissionRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ActivityImport;
+use App\Imports\DataAdmissionImport;
 
 class AdmissionManagementController extends Controller
 {
@@ -18,9 +21,12 @@ class AdmissionManagementController extends Controller
 
     public function storeAdmission(Request $request)
     {
+        //เอาเข้ามูลจากfileเข้าDB
+        $import = Excel::import(new DataAdmissionImport, $request->file('admission_file')->store('temp'));
         $messages = [
             'required' => 'The :attribute field is required.',
         ];
+
 
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [

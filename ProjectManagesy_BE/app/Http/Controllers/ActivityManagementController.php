@@ -7,6 +7,7 @@ use App\Repositories\ActivityRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ActivityImport;
+use App\Imports\DataActivityImport;
 
 
 class ActivityManagementController extends Controller
@@ -21,8 +22,8 @@ class ActivityManagementController extends Controller
 
     public function storeActivity(Request $request)
     {
-
-        $import = Excel::import(new ActivityImport, $request->file('activity_file')->store('temp'));
+        //เอาเข้ามูลจากfileเข้าDB
+        $import = Excel::import(new DataActivityImport, $request->file('activity_file')->store('temp'));
         $messages = [
             'required' => 'The :attribute field is required.',
         ];
