@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Activity extends Migration
+class ActivityStudent extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class Activity extends Migration
      */
     public function up()
     {
-        Schema::create('activity', function (Blueprint $table){
-            $table->bigIncrements('activity_id')->unsigned();
-            $table->string('activity_name',45);
-            $table->integer('activity_year');
-            $table->string('activity_major',45);
+        Schema::create('activity_student', function (Blueprint $table){
+            $table->bigIncrements('activity_student_id')->unsigned();
+            $table->string('activity_student_name',45);
+            $table->integer('activity_student_year');
+            $table->string('activity_student_major',45);
 
             $table->timestamps();
         });
@@ -31,7 +31,7 @@ class Activity extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('activity');
+        Schema::dropIfExists('activity_student');
         Schema::enableForeignKeyConstraints();
     }
 }

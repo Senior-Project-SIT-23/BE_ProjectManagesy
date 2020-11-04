@@ -1,0 +1,2 @@
+"data_activity_id","data_first_name","data_surname","data_degree","data_school_name","data_from_activity_name","data_email","data_tel","created_at","updated_at"
+"2","Camp5","Camp5","Camp5","Camp5","Camp5","Camp5","Camp5","2020-10-15 09:24:47","2020-10-15 09:24:47"

@@ -3,11 +3,11 @@
 namespace App\Imports;
 
 
-use App\Model\DataActivity;
+use App\Model\DataActivityStudent;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class DataActivityImport implements ToModel, WithHeadingRow
+class DataActivityStudentImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -16,7 +16,7 @@ class DataActivityImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
-        return new DataActivity([
+        return new DataActivityStudent([
             "data_first_name" => $row["data_first_name"],
             "data_surname" => $row["data_surname"],
             "data_degree" => $row["data_degree"],

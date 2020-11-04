@@ -19,16 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['checkauth']], function () {
+// Route::group(['middleware' => ['checkauth']], function () {
 
     //Activity
-    Route::post('/activity', 'ActivityManagementController@storeActivity'); //สร้าง activity
-    Route::post('/activity/edit', 'ActivityManagementController@editActivity'); //edit activity
-    Route::post('/activity/delete', 'ActivityManagementController@deleteActivity'); // delete activity
+    //Student
+    Route::post('/activity/student', 'ActivityManagementController@storeStudentActivity'); //สร้าง activity
+    Route::post('/activity/student/edit', 'ActivityManagementController@editStudentActivity'); //edit activity
+    Route::post('/activity/student/delete', 'ActivityManagementController@deleteStudentActivity'); // delete activity
 
-    Route::get('/activity', 'ActivityManagementController@indexAllActivity'); //ดู Activity
-    Route::get('/activity/{activity_id}', 'ActivityManagementController@indexActivity'); //ดู Activity_id
-    Route::get('/activity/readfile', 'ActivityManagementController@readActivity'); //อ่านfile
+    Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity
+    Route::get('/activity/student/{activity_id}', 'ActivityManagementController@indexStudentActivity'); //ดู Activity_id
+    // Route::get('/activity/student/readfile', 'ActivityManagementController@readStudentActivity'); //อ่านfile
 
     //Admission
     Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
@@ -37,7 +38,7 @@ Route::group(['middleware' => ['checkauth']], function () {
 
     Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
     Route::get('/admission/{activity_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
-});
+// });
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');

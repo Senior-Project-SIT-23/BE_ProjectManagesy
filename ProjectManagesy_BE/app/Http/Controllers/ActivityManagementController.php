@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ActivityImport;
 use App\Imports\DataActivityImport;
-
+use App\Imports\DataActivityStudentImport;
 
 class ActivityManagementController extends Controller
 {
@@ -20,10 +20,11 @@ class ActivityManagementController extends Controller
         $this->activity = $activity;
     }
 
-    public function storeActivity(Request $request)
+    public function storeStudentActivity(Request $request)
     {
         //เอาเข้ามูลจากfileเข้าDB
-        $import = Excel::import(new DataActivityImport, $request->file('activity_file')->store('temp'));
+        //นร
+        $import = Excel::import(new DataActivityStudentImport, $request->file('activity_file')->store('activity_student_csv'));
         $messages = [
             'required' => 'The :attribute field is required.',
         ];
@@ -46,26 +47,26 @@ class ActivityManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-    public function indexAllActivity()
+    public function indexStudentAllActivity()
     {
         $activity = $this->activity->getAllActivity();
         return response()->json($activity, 200);
     }
 
-    public function indexActivity($activity_id)
+    public function indexStudentActivity($activity_id)
     {
         $activity = $this->activity->getActivityById($activity_id);
         return response()->json($activity, 200);
     }
 
-    public function editActivity(Request $request)
+    public function editStudentActivity(Request $request)
     {
         $data = $request->all();
         $this->activity->editActivity($data);
         return response()->json('สำเร็จ', 200);
     }
 
-    public function deleteActivity(Request $request)
+    public function deleteStudentActivity(Request $request)
     {
         $data = $request->all();
         $this->activity->deleteActivity($data);
