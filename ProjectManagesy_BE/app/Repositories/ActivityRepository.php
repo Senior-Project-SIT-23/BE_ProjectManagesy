@@ -40,52 +40,52 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function getAllActivity()
     {
         
-        // $activity = Activity::join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->orderBy("activity.created_at", "asc")->get();
+        $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')->orderBy("activity_student.created_at", "asc")->get();
 
         
 
-        // return $activity;
+        return $activity;
     }
 
     public function getActivityById($activity_id)
     {
-        // $activity = Activity::where('activity_id', $activity_id)->first();
+        $activity = ActivityStudent::where('activity_student_id', $activity_id)->first();
 
-        // $attachment = Activity::where('activity.activity_id', $activity_id)
-        //     ->join('activity_file', 'activity_file.activity_id', '=', 'activity.activity_id')->get();
+        $attachment = ActivityStudent::where('activity_student_id.activity_student_id', $activity_id)
+            ->join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student_id.activity_student_id')->get();
 
-        // $activity->attachment = $attachment;
+        $activity->attachment = $attachment;
 
-        // return $activity;
+        return $activity;
     }
 
     public function editActivity($data)
     {
-        // Activity::where('activity_id', $data['activity_id'])->update([
-        //     'activity.activity_name' => $data['activity_name'],
-        //     'activity.activity_year' => $data['activity_year'],
-        //     'activity.activity_major' => $data['activity_major']
-        // ]);
+        ActivityStudent::where('activity_student_id', $data['activity_id'])->update([
+            'activity_student.activity_student_name' => $data['activity_name'],
+            'activity_student.activity_student_year' => $data['activity_year'],
+            'activity_student.activity_student_major' => $data['activity_major']
+        ]);
 
-        // if ($data['new_activity_file']) {
-        //     //Delete file in storage
-        //     $activity_file = ActivityFile::where('activity_id', $data['activity_id'])->first();
-        //     $keep_file_name = $activity_file->keep_file_name;
-        //     unlink(storage_path('app/activity/' . $keep_file_name));
-        //     //Create file in storage
-        //     $temp_name = $data['new_activity_file']->getClientOriginalName();
-        //     $name = pathinfo($temp_name, PATHINFO_FILENAME);
-        //     $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-        //     $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-        //     $path = $data['new_activity_file']->storeAs('/activity', $custom_file_name);
-        //     //Update Activity File in DB
-        //     ActivityFile::where('activity_id', $data['activity_id'])
-        //         ->update([
-        //             'activity_file_name' => $temp_name,
-        //             'activity_file' => $path,
-        //             'keep_file_name' => $custom_file_name
-        //         ]);
-        // }
+        if ($data['new_activity_file']) {
+            //Delete file in storage
+            $activity_file = ActivityStudentFile::where('activity_student_id', $data['activity_id'])->first();
+            $keep_file_name = $activity_file->keep_file_name;
+            unlink(storage_path('app/activity/' . $keep_file_name));
+            //Create file in storage
+            $temp_name = $data['new_activity_file']->getClientOriginalName();
+            $name = pathinfo($temp_name, PATHINFO_FILENAME);
+            $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
+            $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
+            $path = $data['new_activity_file']->storeAs('/activity', $custom_file_name);
+            //Update Activity File in DB
+            ActivityStudentFile::where('activity_student_id', $data['activity_id'])
+                ->update([
+                    'activity_student_file_id' => $temp_name,
+                    'activity_file' => $path,
+                    'keep_file_name' => $custom_file_name
+                ]);
+        }
     }
 
     public function deleteActivity($data)

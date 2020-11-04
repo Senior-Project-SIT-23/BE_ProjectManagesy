@@ -36,11 +36,11 @@ class LoginController extends Controller
         $auth_code = $data['auth_code'];
         $cliend_id = env('CLIENT_ID');
         $secrete_id = env('SECRETE_ID');
+        $redirect_uri = env('REDIRECT_URI');
         $response = null;
 
         try {
-            $URL = env('SSO_URL') . "/oauth/token?client_secret=${secrete_id}&client_id=${cliend_id}&code=${auth_code}";
-            // http://gatewayservice.sit.kmutt.ac.th/api/oauth/token?client_secret=b46Ivmua&client_id=IlNvm&code=SOn2MTlB1I
+            $URL = env('SSO_URL') . "/oauth/token?client_secret=$secrete_id&client_id=$cliend_id&code=$auth_code&redirect_uri=$redirect_uri";
             $client = new Client(['base_uri' => $URL]);
             $response = $client->request('GET', $URL);
             if ($response->getStatusCode() == 200) {
