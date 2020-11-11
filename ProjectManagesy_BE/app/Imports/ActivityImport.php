@@ -14,7 +14,7 @@ class ActivityImport implements ToModel
     */
     public function model(array $row)
     {
-        return new Activity([
+        return new ActivityImport([
             "activity_name" => $row[1],
             "activity_major" => $row[1]
         ]);

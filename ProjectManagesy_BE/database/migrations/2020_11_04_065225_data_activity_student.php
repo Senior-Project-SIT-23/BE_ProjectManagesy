@@ -19,13 +19,15 @@ class DataActivityStudent extends Migration
             $table->string('data_surname', 100);
             $table->string('data_degree',100);
             $table->string('data_school_name',100);
-            $table->string('data_from_activity_name',100);
             $table->string('data_email',100);
             $table->string('data_tel',45);
-
-
-
+            $table->bigInteger('activity_student_id')->unsigned()->nullable();
+            $table->string('data_activity_file_name',100)->nullable();
+            $table->string('data_activity_file',100)->nullable();
+            $table->string('data_keep_file_name',100)->nullable();
             $table->timestamps();
+
+            $table->foreign('activity_student_id')->references('activity_student_id')->on('activity_student')->onDelete('cascade');
         });
     }
 
@@ -37,9 +39,7 @@ class DataActivityStudent extends Migration
     public function down()
     {
         {
-            Schema::disableForeignKeyConstraints();
             Schema::dropIfExists('data_activity_student');
-            Schema::enableForeignKeyConstraints();
         }
     }
 }
