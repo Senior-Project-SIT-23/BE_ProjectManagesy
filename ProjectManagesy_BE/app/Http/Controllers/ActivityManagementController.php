@@ -85,7 +85,6 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        
         $this->activity->editActivity($data);
 
         $file_name =  $request->file('new_activity_file')->getClientOriginalName();

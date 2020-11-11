@@ -9,6 +9,7 @@ use Illuminate\Notifications\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DataActivityStudentImport;
 use App\Model\DataActivityStudent;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class ActivityRepository implements ActivityRepositoryInterface
 {
@@ -73,17 +74,17 @@ class ActivityRepository implements ActivityRepositoryInterface
         ]);
 
 
-        if ($data['delete_activity_file_id']) {
+        if ($data['delete_activity_file_id'] != "null") {
             $activity_file = ActivityStudentFile::where('activity_student_id', $data['activity_id'])->first();
             $data_activity = DataActivityStudent::where('activity_student_id', $data['activity_id'])->first();
-            DataActivityStudent::where('activity_student_id', $data['activity_id'])->delete();
             $keep_student_file_name = $activity_file->keep_student_file_name;
             $keep_data_file_name = $data_activity->data_keep_file_name;
+            DataActivityStudent::where('activity_student_id', $data['activity_id'])->delete();
             unlink(storage_path('app/activity_student/' . $keep_student_file_name));
             unlink(storage_path('app/activity_student_csv/' . $keep_data_file_name));
         }
 
-        if ($data['new_activity_file']) {
+        if ($data['new_activity_file'] != "null") {
             $temp_name = $data['new_activity_file']->getClientOriginalName();
             $name = pathinfo($temp_name, PATHINFO_FILENAME);
             $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
@@ -100,29 +101,18 @@ class ActivityRepository implements ActivityRepositoryInterface
 
     public function deleteActivity($data)
     {
-        //--Pea--
-        // $activity_id = explode(',', $data['activity_id'][0]);
-        // foreach ($activity_id as $value) {
-        //     $activity_file = ActivityFile::where('activity_id', $value)->get();
-
-        //     Activity::where('activity_id', $value)->delete();
-        //     ActivityFile::where('activity_id', $value)->delete();
-
-        //     foreach ($activity_file as $value) {
-        //         $file_name = $value->keep_file_name;
-        //         unlink(storage_path('app/activity/' . $file_name));
-        //     }
-        // }
-
-        //-----------------------------Bom
         foreach ($data['activity_id'] as $value) {
-            $activity_file = ActivityStudentFile::where('activity_student_id', $value)->get();
+            $activity_file = ActivityStudentFile::where('activity_student_id', $value)->first();
+            $data_activity_file = DataActivityStudent::where('activity_student_id', $value)->first();
+
             ActivityStudent::where('activity_student_id', $value)->delete();
             ActivityStudentFile::where('activity_student_id', $value)->delete();
-            foreach ($activity_file as $value) {
-                $file_name = $value->keep_student_file_name;
-                unlink(storage_path('app/activity_student/' . $file_name));
-            }
+            DataActivityStudent::where('activity_student_id', $value)->delete();
+
+            unlink(storage_path('app/activity_student/' . $activity_file->keep_student_file_name));
+            unlink(storage_path('app/activity_student_csv/' . $data_activity_file->data_keep_file_name));
+            
+            
         }
     }
 
