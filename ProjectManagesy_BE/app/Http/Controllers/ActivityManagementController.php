@@ -87,12 +87,16 @@ class ActivityManagementController extends Controller
         $data = $request->all();
         $this->activity->editActivity($data);
 
-        $file_name =  $request->file('new_activity_file')->getClientOriginalName();
-        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+        if ($request->file('new_activity_file')) {
 
-        $import = Excel::import(new DataActivityStudentImport($data['activity_id'], $file_name, $file_name_random), $request->file('new_activity_file')
-            ->storeAs('activity_student_csv', "$file_name_random"));
+            $file_name =  $request->file('new_activity_file')->getClientOriginalName();
+            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+            $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+
+            $import = Excel::import(new DataActivityStudentImport($data['activity_id'], $file_name, $file_name_random), $request->file('new_activity_file')
+                ->storeAs('activity_student_csv', "$file_name_random"));
+        }
+
 
         return response()->json('สำเร็จ', 200);
     }
