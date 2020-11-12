@@ -33,6 +33,7 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
             "data_year" => $row["data_year"],
             "data_major" => $row["data_major"],
             "data_gpax" => $row["data_gpax"],
+            // "admission_name" => $this->admission_name,
             "admission_id" => $this->admission_file_id,
             "data_admission_file_name" => $this->file_name,
             "data_admission_file" => $path,
