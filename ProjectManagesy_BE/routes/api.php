@@ -30,6 +30,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity
     Route::get('/activity/student/{activity_id}', 'ActivityManagementController@indexStudentActivity'); //ดู Activity_id
     Route::get('/activity/student/readfilename/{activity_id}', 'ActivityManagementController@readFileStudentActivity'); //ดึงข้อมูลในไฟล์มาแสดง
+
+
+    //count
+    // Route::get('/activity/student/count', 'ActivityManagementController@countStudentAllActivity'); //count ข้อมูล
     
 
     //Admission

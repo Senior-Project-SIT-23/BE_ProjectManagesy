@@ -10,4 +10,5 @@ interface ActivityRepositoryInterface
     public function editActivity($data);
     public function deleteActivity($data);
     public function getAllFileStudentActivity($activity_id);
+    public function countActivity($activity_id);
 }

@@ -114,6 +114,14 @@ class ActivityManagementController extends Controller
 
     }
 
+    //count
+    public function countStudentAllActivity($activity_id){
+        $activity = $this->activity->countActivity($activity_id);
+        return response()->json($activity, 200);
+    }
+
+    
+
     public function incrementalHash($len = 5)
     {
         $charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

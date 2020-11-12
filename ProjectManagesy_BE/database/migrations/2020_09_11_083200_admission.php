@@ -15,10 +15,11 @@ class Admission extends Migration
     {
         Schema::create('admission', function (Blueprint $table){
             $table->bigIncrements('admission_id')->unsigned();
-            $table->string('admission_name',45);
-            $table->string('round_name',45);
-            $table->string('admission_major',45);
-            $table->string('admission_year',45);
+            $table->string('admission_name',45);//ชื่อโครงการ
+            $table->string('round_name',45);//รอบที่สมัคร
+            $table->string('admission_major',45);//คณะที่สมัคร
+            $table->string('admission_year',45);//ปีการศึกษาที่เข้าข้อมูลเข้า
+
 
             $table->timestamps();
         });

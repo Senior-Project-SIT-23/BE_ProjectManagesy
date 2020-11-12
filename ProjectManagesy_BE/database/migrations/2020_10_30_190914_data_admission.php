@@ -21,6 +21,8 @@ class DataAdmission extends Migration
             $table->string('data_year',100);
             $table->string('data_major',100);
             $table->string('data_gpax',100);
+            $table->string('admission_name',100);
+            $table->string('round_name',100);
             $table->bigInteger('admission_id')->unsigned()->nullable();
             $table->string('data_admission_file_name',100)->nullable();
             $table->string('data_admission_file',100)->nullable();
@@ -29,6 +31,9 @@ class DataAdmission extends Migration
         
             $table->timestamps();
             $table->foreign('admission_id')->references('admission_id')->on('admission')->onDelete('cascade');
+            $table->foreign('admission_name')->references('admission_name')->on('admission')->onDelete('cascade');
+            $table->foreign('round_name')->references('round_name')->on('admission')->onDelete('cascade');
+
         });
     }
 

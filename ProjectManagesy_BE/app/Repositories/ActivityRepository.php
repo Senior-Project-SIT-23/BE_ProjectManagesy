@@ -9,7 +9,6 @@ use Illuminate\Notifications\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DataActivityStudentImport;
 use App\Model\DataActivityStudent;
-use Symfony\Component\VarDumper\Cloner\Data;
 
 class ActivityRepository implements ActivityRepositoryInterface
 {
@@ -47,7 +46,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
 
         $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
-        ->orderBy("activity_student.created_at", "asc")->get();
+            ->orderBy("activity_student.created_at", "asc")->get();
 
 
 
@@ -58,8 +57,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         $activity = ActivityStudent::where('activity_student_id', $activity_id)->first();
 
-        $attachment = ActivityStudent::where('activity_student_id.activity_student_id', $activity_id)
-            ->join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student_id.activity_student_id')->get();
+        $attachment = ActivityStudentFile::where('activity_student_id', $activity_id)->get();
 
         $activity->attachment = $attachment;
 
@@ -112,26 +110,29 @@ class ActivityRepository implements ActivityRepositoryInterface
 
             unlink(storage_path('app/activity_student/' . $activity_file->keep_student_file_name));
             unlink(storage_path('app/activity_student_csv/' . $data_activity_file->data_keep_file_name));
-            
-            
         }
     }
-    
 
-    public function getAllFileStudentActivity($activity_id){
-        // $activity = DataActivityStudent::where('activity_student_id', $activity_id)->get();
-        $activity = DataActivityStudent::join('activity_student', 'activity_student.activity_student_id', '=', 'data_activity_student.activity_student_id')
-        ->orderBy("activity_student.created_at", "asc")->get();
 
-        // $activity = DataActivityStudent::where('activity_student_id', $activity_id)->first();
-
-        // $attachment = DataActivityStudent::where('activity_student_id', $activity_id)
-        // ->join('activity_student', 'activity_student.activity_student_id', '=', 'data_activity_student.activity_student_id')->get();
-       
-        // $activity->attachment = $attachment;
-
+    public function getAllFileStudentActivity($activity_id)
+    {
+        $activity = DataActivityStudent::where('activity_student_id', $activity_id)->get();
         return $activity;
     }
+
+    //count
+    public function countActivity($activity_id)
+    {
+
+        //     // $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
+        //     // ->orderBy("activity_student.created_at", "asc")->get();
+
+
+
+        //     return $activity;
+    }
+
+
 
 
 
