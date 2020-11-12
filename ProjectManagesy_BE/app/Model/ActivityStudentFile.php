@@ -12,4 +12,8 @@ class ActivityStudentFile extends Model
     {
         return $this->belongsTo(ActivityStudent::class, 'activity_student_id');
     }
+    // public function data_activity_student()
+    // {
+    //     return $this->hasMany()
+    // }
 }

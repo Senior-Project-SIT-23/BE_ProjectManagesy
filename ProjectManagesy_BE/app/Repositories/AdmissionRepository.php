@@ -39,6 +39,8 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         $admission_file->keep_file_name = $custom_file_name;
         $admission_file->admission_id = $admission_id;
         $admission_file->save();
+
+        return $admission_file;
     }
 
     public function getAllAdmission()

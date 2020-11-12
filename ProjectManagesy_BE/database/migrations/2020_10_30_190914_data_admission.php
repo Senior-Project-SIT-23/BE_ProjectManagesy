@@ -21,11 +21,14 @@ class DataAdmission extends Migration
             $table->string('data_year',100);
             $table->string('data_major',100);
             $table->string('data_gpax',100);
-           
+            $table->bigInteger('admission_id')->unsigned()->nullable();
+            $table->string('data_admission_file_name',100)->nullable();
+            $table->string('data_admission_file',100)->nullable();
+            $table->string('data_keep_file_name',100)->nullable();
 
-
-
+        
             $table->timestamps();
+            $table->foreign('admission_id')->references('admission_id')->on('admission')->onDelete('cascade');
         });
     }
 

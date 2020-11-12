@@ -108,6 +108,12 @@ class ActivityManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
+    public function readFileStudentActivity($activity_id){
+        $activity = $this->activity->getAllFileStudentActivity($activity_id);
+        return response()->json($activity, 200);
+
+    }
+
     public function incrementalHash($len = 5)
     {
         $charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

@@ -46,7 +46,8 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function getAllActivity()
     {
 
-        $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')->orderBy("activity_student.created_at", "asc")->get();
+        $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
+        ->orderBy("activity_student.created_at", "asc")->get();
 
 
 
@@ -114,6 +115,22 @@ class ActivityRepository implements ActivityRepositoryInterface
             
             
         }
+    }
+    
+
+    public function getAllFileStudentActivity($activity_id){
+        // $activity = DataActivityStudent::where('activity_student_id', $activity_id)->get();
+        $activity = DataActivityStudent::join('activity_student', 'activity_student.activity_student_id', '=', 'data_activity_student.activity_student_id')
+        ->orderBy("activity_student.created_at", "asc")->get();
+
+        // $activity = DataActivityStudent::where('activity_student_id', $activity_id)->first();
+
+        // $attachment = DataActivityStudent::where('activity_student_id', $activity_id)
+        // ->join('activity_student', 'activity_student.activity_student_id', '=', 'data_activity_student.activity_student_id')->get();
+       
+        // $activity->attachment = $attachment;
+
+        return $activity;
     }
 
 
