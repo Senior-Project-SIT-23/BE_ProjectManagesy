@@ -62,8 +62,9 @@ class AdmissionManagementController extends Controller
     public function indexAdmission($admission_id)
     {
         $admission = $this->admission->getAdmissionById($admission_id);
-        return response()->json('สำเร็จ', 200);
+        return response()->json($admission, 200);
     }
+
     public function editAdmission(Request $request)
     {
         $messages = [
@@ -88,12 +89,12 @@ class AdmissionManagementController extends Controller
         $this->admission->editAdmission($data);
 
         if ($request->file('new_activity_file')) {
-        $file_name = $request->file('new_admission_file')->getClientOriginalName();
-        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+            $file_name = $request->file('new_admission_file')->getClientOriginalName();
+            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+            $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
 
-        $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
-            ->storeAs('admission_csv', "$file_name_random"));
+            $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
+                ->storeAs('admission_csv', "$file_name_random"));
         }
         return response()->json('สำเร็จ', 200);
     }
@@ -103,6 +104,14 @@ class AdmissionManagementController extends Controller
         $data = $request->all();
         $this->admission->deleteAdmission($data);
         return response()->json('สำเร็จ', 200);
+    }
+
+    public function readFileAdmission($admission_id)
+    {
+        $admission = $this->admission->getAllFileAdmission($admission_id);
+        return response()->json($admission, 200);
+
+
     }
 
     public function incrementalHash($len = 5)

@@ -9,5 +9,6 @@ interface AdmissionRepositoryInterface
     public function getAdmissionById($admission_id);
     public function editAdmission($data);
     public function deleteAdmission($data);
+    public function getAllFileAdmission($admission_id);
 
 }

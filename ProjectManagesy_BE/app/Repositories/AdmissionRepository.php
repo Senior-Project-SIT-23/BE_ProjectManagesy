@@ -49,9 +49,10 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     {
         $admission = Admission::where('admission_id', $admission_id)->first();
 
-        $attachment = Admission::where('admission.admission_id', $admission_id)->join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->get();
+        $attachment = AdmissionFile::where('admission_id', $admission_id)->get();
 
-        $admission->$attachment = $attachment;
+        $admission->attachment = $attachment;
+
         return $admission;
     }
 
@@ -68,7 +69,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             ->update([
                 'data_year' => $data['admission_year'],
                 'admission_name' => $data['admission_name'],
-                'data_major'=> $data['admission_major'],
+                'data_major' => $data['admission_major'],
                 'round_name' => $data['round_name']
             ]);
 
@@ -110,6 +111,12 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             unlink(storage_path('app/admission/' . $adminssion_file->keep_file_name));
             unlink(storage_path('app/admission_csv/' . $data_admission_file->data_keep_file_name));
         }
+    }
+
+    public function getAllFileAdmission($admission_id){
+        $admission = DataAdmission::where('admission_id', $admission_id)->get();
+        return $admission;
+
     }
 
 
