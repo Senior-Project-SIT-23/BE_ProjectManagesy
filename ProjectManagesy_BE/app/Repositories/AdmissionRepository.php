@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Model\Admission;
 use App\Model\AdmissionFile;
+use App\Model\DataAdmission;
 use Illuminate\Notifications\Action;
 
 class AdmissionRepository implements AdmissionRepositoryInterface
@@ -18,14 +19,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         $admission->admission_year = $data['admission_year'];
         $admission->save();
 
-
-
-        $temp_admission = Admission::where('admission_name', $data['admission_name'])
-            ->where('round_name', $data['round_name'])
-            ->where('admission_year', $data['admission_year'])
-            ->first();
-
-        $admission_id = $temp_admission->admission_id;
+        $admission_id = $admission->id;
 
         $temp_name = $data['admission_file']->getClientOriginalName(); //เอาชื่อไฟล์ที่เก็บอยุ่ในvalueมาเก็บไว้ในtempname
         $name = pathinfo($temp_name, PATHINFO_FILENAME); //เก็บชื่อของไฟล์
@@ -70,76 +64,51 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             'admission.admission_year' => $data['admission_year']
         ]);
 
-        if ($data['new_admission_file']) {
-            $admission_file = AdmissionFile::where('admission_id', $data['admission_id'])->first();
-            $keep_file_name = $admission_file->keep_file_name;
-            unlink(storage_path('app/admission/' . $keep_file_name));
+        DataAdmission::where('admission_id', $data['admission_id'])
+            ->update([
+                'data_year' => $data['admission_year'],
+                'admission_name' => $data['admission_name'],
+                'data_major'=> $data['admission_major'],
+                'round_name' => $data['round_name']
+            ]);
 
+        if ($data['delete_admission_file_id'] != "null") {
+            $admission_file = AdmissionFile::where('admission_id', $data['admission_id'])->first();
+            $data_admission = DataAdmission::where('admission_id', $data['admission_id'])->first();
+            $keep_file_name = $admission_file->keep_file_name;
+            $data_keep_file_name = $data_admission->data_keep_file_name;
+            DataAdmission::where('admission_id', $data['admission_id'])->delete();
+            unlink(storage_path('app/admission/' . $keep_file_name));
+            unlink(storage_path('app/admission_csv/' . $data_keep_file_name));
+        }
+
+        if ($data['new_admission_file'] != "null") {
             $temp_name = $data['new_admission_file']->getClientOriginalName();
             $name = pathinfo($temp_name, PATHINFO_FILENAME);
             $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
             $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
             $path = $data['new_admission_file']->storeAs('/admission', $custom_file_name);
-
             AdmissionFile::where('admission_id', $data['admission_id'])
                 ->update([
-                    'admission_file_name' => $temp_name,
-                    'admission_file' => $path,
-                    'keep_file_name' => $custom_file_name
+                    'admission_file.admission_file_name' => $temp_name,
+                    'admission_file.admission_file' => $path,
+                    'admission_file.keep_file_name' => $custom_file_name,
                 ]);
         }
-
-
-        // $admission = AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->first();
-        // if ($admission) {
-        //     $admission_name = $admission->keep_file_name;
-        //     AdmissionFile::where('admission_file_id', $data['delete_admission_file_id'])->delete();
-        //     unlink(storage_path('app/admission/' . $admission_name));
-        // }
-
-
-
-
-        // if ($data['new_admission_file']) {
-        //     $temp_name = $data['new_admission_file']->getClientOriginalName();
-        //     $name = pathinfo($temp_name, PATHINFO_FILENAME);
-        //     $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-        //     $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-        //     $path = $data['new_admission_file']->storeAs('/admission', $custom_file_name);
-        //     $admission_file = new AdmissionFile();
-        //     $admission_file->admission_file_name = $temp_name;
-        //     $admission_file->admission_file = $path;
-        //     $admission_file->keep_file_name = $custom_file_name;
-        //     $admission_file->admission_id = $data['admission_id'];
-        //     $admission_file->save();
-        // }
-
     }
 
     public function deleteAdmission($data)
     {
-        // $admission_id = explode(',', $data['admission_id'][0]);
-
-        // foreach ($admission_id as $value) {
-        //     $admission_file = AdmissionFile::where('admission_id', $value)->get();
-
-        //     Admission::where('admission_id', $value)->delete();
-        //     AdmissionFile::where('admission_id', $value)->delete();
-
-        //     foreach ($admission_file as $value) {
-        //         $file_name = $value->keep_file_name;
-        //         unlink(storage_path('app/admission/' . $file_name));
-        //     }
-        // }
-
         foreach ($data['admission_id'] as $value) {
-            $admission_file = AdmissionFile::where('admission_id', $value)->get();
+            $adminssion_file = AdmissionFile::where('admission_id', $value)->first();
+            $data_admission_file = DataAdmission::where('admission_id', $value)->first();
+
             Admission::where('admission_id', $value)->delete();
             AdmissionFile::where('admission_id', $value)->delete();
-            foreach ($admission_file as $value) {
-                $file_name = $value->keep_file_name;
-                unlink(storage_path('app/admission/' . $file_name));
-            }
+            DataAdmission::where('admission_id', $value)->delete();
+
+            unlink(storage_path('app/admission/' . $adminssion_file->keep_file_name));
+            unlink(storage_path('app/admission_csv/' . $data_admission_file->data_keep_file_name));
         }
     }
 

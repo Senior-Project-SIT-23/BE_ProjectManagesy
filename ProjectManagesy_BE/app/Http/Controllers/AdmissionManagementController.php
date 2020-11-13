@@ -21,8 +21,6 @@ class AdmissionManagementController extends Controller
 
     public function storeAdmission(Request $request)
     {
-        //เอาเข้ามูลจากfileเข้าDB
-        // $import = Excel::import(new DataAdmissionImport, $request->file('admission_file')->store('temp'));
         $messages = [
             'required' => 'The :attribute field is required.',
         ];
@@ -42,16 +40,15 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $this->admission->createAdmission($data);
         $admission_file = $this->admission->createAdmission($data);
 
         $file_name = $request->file('admission_file')->getClientOriginalName();
         $extension = pathinfo($file_name, PATHINFO_EXTENSION);
         $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
 
-        $import = Excel::import(new DataAdmissionImport($admission_file->id, $file_name, $file_name_random), $request->file('admission_file')
-        ->storeAs('admission_csv', "$file_name_random"));
-        
+        $import = Excel::import(new DataAdmissionImport($admission_file->id, $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('admission_file')
+            ->storeAs('admission_csv', "$file_name_random"));
+
 
         return response()->json('สำเร็จ', 200);
     }
@@ -69,8 +66,35 @@ class AdmissionManagementController extends Controller
     }
     public function editAdmission(Request $request)
     {
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+
+
+        //ตรวจสอบข้อมูล
+        $validator =  Validator::make($request->all(), [
+            'admission_id' => 'required',
+            'admission_name' => 'required',
+            'round_name' => 'required',
+            'admission_major' => 'required',
+            'admission_year' => 'required',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
         $data = $request->all();
         $this->admission->editAdmission($data);
+
+        if ($request->file('new_activity_file')) {
+        $file_name = $request->file('new_admission_file')->getClientOriginalName();
+        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+
+        $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
+            ->storeAs('admission_csv', "$file_name_random"));
+        }
         return response()->json('สำเร็จ', 200);
     }
 
@@ -80,5 +104,19 @@ class AdmissionManagementController extends Controller
         $this->admission->deleteAdmission($data);
         return response()->json('สำเร็จ', 200);
     }
-    
+
+    public function incrementalHash($len = 5)
+    {
+        $charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        $base = strlen($charset);
+        $result = '';
+
+        $now = explode(' ', microtime())[1];
+        while ($now >= $base) {
+            $i = $now % $base;
+            $result = $charset[$i] . $result;
+            $now /= $base;
+        }
+        return substr($result, -5);
+    }
 }

@@ -20,10 +20,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->activity_student_major = $data['activity_major'];
         $activity->save();
 
-        $temp_activity = ActivityStudent::where('activity_student_name', $data['activity_name'])
-            ->where('activity_student_year', $data['activity_year'])
-            ->where('activity_student_major', $data['activity_major'])->first();
-        $activity_student_id = $temp_activity->activity_student_id;
+        $activity_student_id = $activity->id;
 
         //บันทึกลง Activity file & เก็บไฟล์เข้าโฟลเดอร์ BE
         $temp_name = $data['activity_file']->getClientOriginalName();

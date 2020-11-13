@@ -11,9 +11,20 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
 {
     public $admission_file_id;
 
-    public function __construct($admission_file_id, $file_name, $file_name_random)
-    {
+    public function __construct(
+        $admission_file_id,
+        $admission_name,
+        $round_name,
+        $admission_major,
+        $data_year,
+        $file_name,
+        $file_name_random
+    ) {
         $this->admission_file_id = $admission_file_id;
+        $this->admission_name = $admission_name;
+        $this->round_name = $round_name;
+        $this->admission_major = $admission_major;
+        $this->data_year = $data_year;
         $this->file_name = $file_name;
         $this->file_name_random = $file_name_random;
     }
@@ -25,15 +36,16 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $path = 'admission_csv/' . $this->file_name_random;
-        
+
         return new DataAdmission([
             "data_first_name" => $row["data_first_name"],
             "data_surname" => $row["data_surname"],
             "data_school_name" => $row["data_school_name"],
-            "data_year" => $row["data_year"],
-            "data_major" => $row["data_major"],
+            "data_year" => $this->data_year,
+            "data_major" => $this->admission_major,
             "data_gpax" => $row["data_gpax"],
-            // "admission_name" => $this->admission_name,
+            "admission_name" => $this->admission_name,
+            "round_name" => $this->round_name,
             "admission_id" => $this->admission_file_id,
             "data_admission_file_name" => $this->file_name,
             "data_admission_file" => $path,
