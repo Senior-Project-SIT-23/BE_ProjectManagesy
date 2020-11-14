@@ -4,6 +4,7 @@ namespace App\Imports;
 
 
 use App\Model\DataAdmission;
+use App\Model\DataStudentAdmission;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -35,6 +36,29 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
+        // $student = DataStudentAdmission::where('data_first_name', $row["data_first_name"])
+        //     ->where('data_surname', $row["data_surname"])->first();
+        // if ($student) {
+        //     $num_of_admission = $student->count_admission;
+        //     $admission = $num_of_admission + 1;
+        //     DataStudentAdmission::where('data_first_name', $row["data_first_name"])
+        //         ->where('data_surname', $row["data_surname"])->update(['count_admission' => $admission]);
+        // } else {
+        //     $data_student_admission = new DataStudentAdmission();
+        //     $data_student_admission->data_first_name = $row["data_first_name"];
+        //     $data_student_admission->data_surname = $row["data_surname"];
+        //     $data_student_admission->data_school_name = $row["data_school_name"];
+        //     $data_student_admission->data_year = $this->data_year;
+        //     $data_student_admission->data_major = $this->admission_major;
+        //     $data_student_admission->data_gpax = $row["data_gpax"];
+        //     $data_student_admission->data_email = $row["data_email"];
+        //     $data_student_admission->data_email = $row["data_email"];
+        //     $data_student_admission->data_phone = $row["data_phone"];
+        //     $data_student_admission->count_admission = 1;
+        //     $data_student_admission->save();
+        // }
+
+
         $path = 'admission_csv/' . $this->file_name_random;
 
         return new DataAdmission([
@@ -44,6 +68,8 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
             "data_year" => $this->data_year,
             "data_major" => $this->admission_major,
             "data_gpax" => $row["data_gpax"],
+            "data_email" => $row["data_email"],
+            "data_phone" => $row["data_phone"],
             "admission_name" => $this->admission_name,
             "round_name" => $this->round_name,
             "admission_id" => $this->admission_file_id,
@@ -53,5 +79,7 @@ class DataAdmissionImport implements ToModel, WithHeadingRow
 
             //ชื่อcolumในexcelต้องเป็นแบบนี้
         ]);
+
+        
     }
 }

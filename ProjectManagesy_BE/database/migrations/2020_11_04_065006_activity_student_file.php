@@ -13,11 +13,14 @@ class ActivityStudentFile extends Migration
      */
     public function up()
     {
-        Schema::create('activity_student_file', function (Blueprint $table){
+        Schema::create('activity_student_file', function (Blueprint $table) {
             $table->bigIncrements('activity_student_file_id');
-            $table->string('activity_student_file_name',100);
-            $table->string('activity_student_file',100);
-            $table->string('keep_student_file_name',100);
+            $table->string('data_first_name', 100);
+            $table->string('data_surname', 100);
+            $table->string('data_degree', 100);
+            $table->string('data_school_name', 100);
+            $table->string('data_email', 100);
+            $table->string('data_phone', 100);
             $table->bigInteger('activity_student_id')->unsigned();
 
             $table->timestamps();

@@ -113,13 +113,11 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         }
     }
 
-    public function getAllFileAdmission($admission_id){
+    public function getAllFileAdmission($admission_id)
+    {
         $admission = DataAdmission::where('admission_id', $admission_id)->get();
         return $admission;
-
     }
-
-
 
 
 

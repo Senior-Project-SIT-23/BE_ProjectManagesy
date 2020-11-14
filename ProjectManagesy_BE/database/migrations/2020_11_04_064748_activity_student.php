@@ -18,7 +18,7 @@ class ActivityStudent extends Migration
             $table->string('activity_student_name',45);
             $table->integer('activity_student_year');
             $table->string('activity_student_major',45);
-
+            $table->string('activity_student_file_name', 100);
             $table->timestamps();
         });
     }

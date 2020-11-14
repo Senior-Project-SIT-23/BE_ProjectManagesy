@@ -24,32 +24,49 @@ class ActivityManagementController extends Controller
 
     public function storeStudentActivity(Request $request)
     {
-        //เอาเข้ามูลจากfileเข้าDB
-        //นร
         $messages = [
             'required' => 'The :attribute field is required.',
         ];
 
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
-            'activity_name' => 'required',
-            'activity_year' => 'required',
-            'activity_major' => 'required',
-            'activity_file' => 'required'
+            'activity_student_name' => 'required',
+            'activity_student_year' => 'required',
+            'activity_student_major' => 'required',
+            'activity_student_file_name' => 'required',
+            'activity_student_file' => 'required'
         ], $messages);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 500);
         }
+
         $data = $request->all();
-        $activity_file = $this->activity->createActivity($data);
+        $this->activity->createActivity($data);
 
-        $file_name =  $request->file('activity_file')->getClientOriginalName();
-        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+        return response()->json('สำเร็จ', 200);
+    }
 
-        $import = Excel::import(new DataActivityStudentImport($activity_file->id, $file_name, $file_name_random), $request->file('activity_file')
-            ->storeAs('activity_student_csv', "$file_name_random"));
+    public function editStudentActivity(Request $request)
+    {
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+
+        //ตรวจสอบข้อมูล
+        $validator =  Validator::make($request->all(), [
+            'activity_student_id' => 'required',
+            'activity_student_name' => 'required',
+            'activity_student_year' => 'required',
+            'activity_student_major' => 'required'
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
+        $data = $request->all();
+        $this->activity->editActivity($data);
 
         return response()->json('สำเร็จ', 200);
     }
@@ -64,41 +81,6 @@ class ActivityManagementController extends Controller
     {
         $activity = $this->activity->getActivityById($activity_id);
         return response()->json($activity, 200);
-    }
-
-    public function editStudentActivity(Request $request)
-    {
-        $messages = [
-            'required' => 'The :attribute field is required.',
-        ];
-
-        //ตรวจสอบข้อมูล
-        $validator =  Validator::make($request->all(), [
-            'activity_id' => 'required',
-            'activity_name' => 'required',
-            'activity_year' => 'required',
-            'activity_major' => 'required'
-        ], $messages);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 500);
-        }
-
-        $data = $request->all();
-        $this->activity->editActivity($data);
-
-        if ($request->file('new_activity_file')) {
-
-            $file_name =  $request->file('new_activity_file')->getClientOriginalName();
-            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-            $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
-
-            $import = Excel::import(new DataActivityStudentImport($data['activity_id'], $file_name, $file_name_random), $request->file('new_activity_file')
-                ->storeAs('activity_student_csv', "$file_name_random"));
-        }
-
-
-        return response()->json('สำเร็จ', 200);
     }
 
     public function deleteStudentActivity(Request $request)

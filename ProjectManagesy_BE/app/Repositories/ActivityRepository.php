@@ -15,37 +15,34 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function createActivity($data)
     {
         $activity = new ActivityStudent;
-        $activity->activity_student_name = $data['activity_name'];
-        $activity->activity_student_year = $data['activity_year'];
-        $activity->activity_student_major = $data['activity_major'];
+        $activity->activity_student_name = $data['activity_student_name'];
+        $activity->activity_student_year = $data['activity_student_year'];
+        $activity->activity_student_major = $data['activity_student_major'];
+        $activity->activity_student_file_name = $data['activity_student_file_name'];
         $activity->save();
 
-        $activity_student_id = $activity->id;
-
-        //บันทึกลง Activity file & เก็บไฟล์เข้าโฟลเดอร์ BE
-        $temp_name = $data['activity_file']->getClientOriginalName();
-        $name = pathinfo($temp_name, PATHINFO_FILENAME);
-        $extension = pathinfo($temp_name, PATHINFO_EXTENSION);
-        $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-        $path = $data['activity_file']->storeAs('/activity_student', $custom_file_name);
-        $activity_file = new ActivityStudentFile();
-        $activity_file->activity_student_file_name = $temp_name;
-        $activity_file->activity_student_file = $path;
-        $activity_file->keep_student_file_name = $custom_file_name;
-        $activity_file->activity_student_id = $activity_student_id;
-        $activity_file->save();
-
-        return $activity_file;
+        foreach ($data['activity_student_file'] as  $value) {
+            $activity_student_file = new ActivityStudentFile();
+            $activity_student_file->data_first_name = $value['data_first_name'];
+            $activity_student_file->data_surname = $value['data_surname'];
+            $activity_student_file->data_degree = $value['data_degree'];
+            $activity_student_file->data_school_name = $value['data_school_name'];
+            $activity_student_file->data_email = $value['data_email'];
+            $activity_student_file->data_phone = $value['data_phone'];
+            $activity_student_file->activity_student_id = $activity->id;
+            $activity_student_file->save();
+        }
     }
 
 
     public function getAllActivity()
     {
-
-        $activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
-            ->orderBy("activity_student.created_at", "asc")->get();
-
-
+        $activity = ActivityStudent::all();
+        
+        foreach ($activity as $value) {
+            $activity_file = ActivityStudentFile::where('activity_student_id',$value['activity_student_id'])->get();
+            $value['acitivty_file'] = $activity_file;
+        }
 
         return $activity;
     }

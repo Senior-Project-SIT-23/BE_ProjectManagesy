@@ -88,7 +88,7 @@ class AdmissionManagementController extends Controller
         $data = $request->all();
         $this->admission->editAdmission($data);
 
-        if ($request->file('new_activity_file')) {
+        if ($request->file('new_admission_file')) {
             $file_name = $request->file('new_admission_file')->getClientOriginalName();
             $extension = pathinfo($file_name, PATHINFO_EXTENSION);
             $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";

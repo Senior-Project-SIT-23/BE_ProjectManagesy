@@ -20,5 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Repositories\LoginRepositoryInterface',
             'App\Repositories\LoginRepository'
         );
+        $this->app->bind(
+            'App\Repositories\AnalyzeRepositoryInterface',
+            'App\Repositories\AnalyzeRepository'
+        );
+
     }
 }

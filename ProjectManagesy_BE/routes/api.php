@@ -45,6 +45,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
     Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
 
+    //
+    Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
+    Route::get('/student', 'AnalyzeController@indexStudent');
 
 // });
 
