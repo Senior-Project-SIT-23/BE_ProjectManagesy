@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['checkauth']], function () {
 
-    //Activity
+    // Activity
     //Student
     Route::post('/activity/student', 'ActivityManagementController@storeStudentActivity'); //สร้าง activity
     Route::post('/activity/student/edit', 'ActivityManagementController@editStudentActivity'); //edit activity

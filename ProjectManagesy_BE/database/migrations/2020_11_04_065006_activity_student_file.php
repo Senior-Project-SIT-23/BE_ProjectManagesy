@@ -20,7 +20,7 @@ class ActivityStudentFile extends Migration
             $table->string('data_degree', 100);
             $table->string('data_school_name', 100);
             $table->string('data_email', 100);
-            $table->string('data_phone', 100);
+            $table->string('data_tel', 100);
             $table->bigInteger('activity_student_id')->unsigned();
 
             $table->timestamps();
