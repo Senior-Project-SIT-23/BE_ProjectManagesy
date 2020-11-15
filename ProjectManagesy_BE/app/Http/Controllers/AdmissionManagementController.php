@@ -40,17 +40,19 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $admission_file = $this->admission->createAdmission($data);
-
-        $file_name = $request->file('admission_file')->getClientOriginalName();
-        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
-
-        $import = Excel::import(new DataAdmissionImport($admission_file->id, $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('admission_file')
-            ->storeAs('admission_csv', "$file_name_random"));
-
+        $this->admission->createAdmission($data);
 
         return response()->json('สำเร็จ', 200);
+
+        // $file_name = $request->file('admission_file')->getClientOriginalName();
+        // $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        // $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+
+        // $import = Excel::import(new DataAdmissionImport($admission_file->id, $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('admission_file')
+        //     ->storeAs('admission_csv', "$file_name_random"));
+
+
+        // return response()->json('สำเร็จ', 200);
     }
 
     public function indexAllAdmission()
@@ -88,14 +90,14 @@ class AdmissionManagementController extends Controller
         $data = $request->all();
         $this->admission->editAdmission($data);
 
-        if ($request->file('new_admission_file')) {
-            $file_name = $request->file('new_admission_file')->getClientOriginalName();
-            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-            $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
+        // if ($request->file('new_admission_file')) {
+        //     $file_name = $request->file('new_admission_file')->getClientOriginalName();
+        //     $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        //     $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
 
-            $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
-                ->storeAs('admission_csv', "$file_name_random"));
-        }
+        //     $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
+        //         ->storeAs('admission_csv', "$file_name_random"));
+        // }
         return response()->json('สำเร็จ', 200);
     }
 
