@@ -14,7 +14,7 @@ class ActivityRepository implements ActivityRepositoryInterface
 {
     public function createActivity($data)
     {
-        foreach ($data['activity_student_file'] as  $value) {
+        
         $activity = new ActivityStudent;
         $activity->activity_student_name = $data['activity_student_name'];
         $activity->activity_student_year = $data['activity_student_year'];
@@ -22,7 +22,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->activity_student_file_name = $data['activity_student_file_name'];
         $activity->save();
 
-        // foreach ($data['activity_student_file'] as  $value) {
+        foreach ($data['activity_student_file'] as  $value) {
             if (
                 $value['data_first_name'] && $value['data_surname']
                 && $value['data_degree'] && $value['data_school_name']
