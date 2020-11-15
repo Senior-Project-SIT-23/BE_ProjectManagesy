@@ -21,76 +21,47 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->activity_student_file_name = $data['activity_student_file_name'];
         $activity->save();
 
-        if ($data['activity_student_file']) {
-            foreach ($data['activity_student_file'] as  $value) {
-                try {
-                    if (
-                        $value['data_first_name'] && $value['data_surname']
-                        && $value['data_degree'] && $value['data_school_name']
-                        && $value['data_email'] && $value['data_tel']
-                    ) {
-                        $activity_student_file = new ActivityStudentFile();
-                        $activity_student_file->data_first_name = $value['data_first_name'];
-                        $activity_student_file->data_surname = $value['data_surname'];
-                        $activity_student_file->data_degree = $value['data_degree'];
-                        $activity_student_file->data_school_name = $value['data_school_name'];
-                        $activity_student_file->data_email = $value['data_email'];
-                        $activity_student_file->data_tel = $value['data_tel'];
-                        $activity_student_file->activity_student_id = $activity->id;
-                        $activity_student_file->save();
-                    }
-                } catch (\Throwable $th) {
-                    ActivityStudent::where('activity_student_id', $activity->id)->delete();
-                    return $th;
-                }
-            }
+        foreach ($data['activity_student_file'] as  $value) {
+            $activity_student_file = new ActivityStudentFile();
+            $activity_student_file->data_first_name = $value['data_first_name'];
+            $activity_student_file->data_surname = $value['data_surname'];
+            $activity_student_file->data_degree = $value['data_degree'];
+            $activity_student_file->data_school_name = $value['data_school_name'];
+            $activity_student_file->data_email = $value['data_email'];
+            $activity_student_file->data_tel = $value['data_tel'];
+            $activity_student_file->activity_student_id = $activity->id;
+            $activity_student_file->save();
         }
     }
 
     public function editActivity($data)
     {
-        $activity_old = ActivityStudent::where('activity_student_id', $data['activity_student_id'])->first();
-
-        ActivityStudent::where('activity_student_id', $data['activity_student_id'])->update([
-            'activity_student.activity_student_name' => $data['activity_student_name'],
-            'activity_student.activity_student_year' => $data['activity_student_year'],
-            'activity_student.activity_student_major' => $data['activity_student_major']
-        ]);
-
-        if ($data['activity_student_file_name']) {
+        if ($data['activity_student_file']) {
             ActivityStudent::where('activity_student_id', $data['activity_student_id'])
                 ->update([
-                    'activity_student.activity_student_file_name' => $data['activity_student_file_name']
+                    'activity_student.activity_student_name' => $data['activity_student_name'],
+                    'activity_student.activity_student_year' => $data['activity_student_year'],
+                    'activity_student.activity_student_major' => $data['activity_student_major'],
+                    'activity_student.activity_student_file_name' => $data['activity_student_file_name'],
                 ]);
-            foreach ($data['activity_student_file'] as $value) {
-                try {
-                    if (
-                        $value['data_first_name'] && $value['data_surname']
-                        && $value['data_degree'] && $value['data_school_name']
-                        && $value['data_email'] && $value['data_tel']
-                    ) {
-                        ActivityStudentFile::where('activity_student_id', $data['activity_student_id'])->delete();
-                        $activity_student_file = new ActivityStudentFile();
-                        $activity_student_file->data_first_name = $value['data_first_name'];
-                        $activity_student_file->data_surname = $value['data_surname'];
-                        $activity_student_file->data_degree = $value['data_degree'];
-                        $activity_student_file->data_school_name = $value['data_school_name'];
-                        $activity_student_file->data_email = $value['data_email'];
-                        $activity_student_file->data_tel = $value['data_tel'];
-                        $activity_student_file->activity_student_id = $data['activity_student_id'];
-                        $activity_student_file->save();
-                    }
-                } catch (\Throwable $th) {
-                    ActivityStudent::where('activity_student_id', $data['activity_student_id'])
-                        ->update([
-                            'activity_student.activity_student_name' => $activity_old->activity_student_name,
-                            'activity_student.activity_student_year' => $activity_old->activity_student_year,
-                            'activity_student.activity_student_major' => $activity_old->activity_student_major,
-                            'activity_student.activity_student_file_name' => $activity_old->activity_student_file_name
-                        ]);
-                    return $th;
-                }
+            ActivityStudentFile::where('activity_student_id', $data['activity_student_id'])->delete();
+            foreach ($data['activity_student_file'] as  $value) {
+                $activity_student_file = new ActivityStudentFile();
+                $activity_student_file->data_first_name = $value['data_first_name'];
+                $activity_student_file->data_surname = $value['data_surname'];
+                $activity_student_file->data_degree = $value['data_degree'];
+                $activity_student_file->data_school_name = $value['data_school_name'];
+                $activity_student_file->data_email = $value['data_email'];
+                $activity_student_file->data_tel = $value['data_tel'];
+                $activity_student_file->activity_student_id = $data['activity_student_id'];
+                $activity_student_file->save();
             }
+        } else {
+            ActivityStudent::where('activity_student_id', $data['activity_student_id'])->update([
+                'activity_student.activity_student_name' => $data['activity_student_name'],
+                'activity_student.activity_student_year' => $data['activity_student_year'],
+                'activity_student.activity_student_major' => $data['activity_student_major']
+            ]);
         }
     }
 

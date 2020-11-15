@@ -42,10 +42,23 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        $res = $this->activity->createActivity($data);
-        if ($res) {
-            return response()->json($res, 500);
+
+        foreach ($data['activity_student_file'] as $value) {
+            $validator2 =  Validator::make($value, [
+                'data_first_name' => 'required',
+                'data_surname' => 'required',
+                'data_degree' => 'required',
+                'data_school_name' => 'required',
+                'data_email' => 'required',
+                'data_tel' => 'required'
+            ], $messages);
+            if ($validator2->fails()) {
+                return response()->json($validator2->errors(), 500);
+            }
         }
+
+        $this->activity->createActivity($data);
+
         return response()->json('สำเร็จ', 200);
     }
 
@@ -68,11 +81,24 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        $res = $this->activity->editActivity($data);
 
-        if ($res) {
-            return response()->json($res, 500);
+        if($data['activity_student_file']){
+            foreach ($data['activity_student_file'] as $value) {
+                $validator2 =  Validator::make($value, [
+                    'data_first_name' => 'required',
+                    'data_surname' => 'required',
+                    'data_degree' => 'required',
+                    'data_school_name' => 'required',
+                    'data_email' => 'required',
+                    'data_tel' => 'required'
+                ], $messages);
+                if ($validator2->fails()) {
+                    return response()->json($validator2->errors(), 500);
+                }
+            }
         }
+
+        $this->activity->editActivity($data);
         return response()->json('สำเร็จ', 200);
     }
 

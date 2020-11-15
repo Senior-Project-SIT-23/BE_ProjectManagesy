@@ -31,7 +31,8 @@ class AdmissionManagementController extends Controller
             'round_name' => 'required',
             'admission_major' => 'required',
             'admission_year' => 'required',
-            'admission_file' => 'required'
+            'admission_file_name' => 'required',
+            'admission_file' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -39,11 +40,22 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $res = $this->admission->createAdmission($data);
 
-        if ($res) {
-            return response()->json($res, 500);
+        foreach ($data['admission_file'] as $value) {
+            $validator2 =  Validator::make($value, [
+                'data_first_name' => 'required',
+                'data_surname' => 'required',
+                'data_school_name' => 'required',
+                'data_gpax' => 'required',
+                'data_email' => 'required',
+                'data_tel' => 'required'
+            ], $messages);
+            if ($validator2->fails()) {
+                return response()->json($validator2->errors(), 500);
+            }
         }
+
+        $this->admission->createAdmission($data);
         return response()->json('สำเร็จ', 200);
     }
 
@@ -79,11 +91,24 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $res = $this->admission->editAdmission($data);
 
-        if ($res) {
-            return response()->json($res, 500);
+        if ($data['admission_file']) {
+            foreach ($data['admission_file'] as $value) {
+                $validator2 =  Validator::make($value, [
+                    'data_first_name' => 'required',
+                    'data_surname' => 'required',
+                    'data_school_name' => 'required',
+                    'data_gpax' => 'required',
+                    'data_email' => 'required',
+                    'data_tel' => 'required'
+                ], $messages);
+                if ($validator2->fails()) {
+                    return response()->json($validator2->errors(), 500);
+                }
+            }
         }
+
+        $this->admission->editAdmission($data);
         return response()->json('สำเร็จ', 200);
     }
 
