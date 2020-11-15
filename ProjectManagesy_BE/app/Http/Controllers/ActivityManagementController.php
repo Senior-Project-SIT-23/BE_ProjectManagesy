@@ -68,13 +68,12 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        $activity = $this->activity->editActivity($data);
+        $res = $this->activity->editActivity($data);
 
-        if ($activity == 'fail') {
-            return response()->json('!Can not edit!', 500);
-        } else {
-            return response()->json('สำเร็จ', 200);
+        if ($res) {
+            return response()->json($res, 500);
         }
+        return response()->json('สำเร็จ', 200);
     }
 
     public function indexStudentAllActivity()
