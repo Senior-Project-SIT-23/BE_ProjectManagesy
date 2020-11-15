@@ -39,8 +39,11 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $this->admission->createAdmission($data);
+        $res = $this->admission->createAdmission($data);
 
+        if ($res) {
+            return response()->json($res, 500);
+        }
         return response()->json('สำเร็จ', 200);
     }
 
@@ -76,13 +79,12 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $admission = $this->admission->editAdmission($data);
+        $res = $this->admission->editAdmission($data);
 
-        if ($admission == 'Fail') {
-            return response()->json('!Can not edit!', 500);
-        } else {
-            return response()->json('สำเร็จ', 200);
+        if ($res) {
+            return response()->json($res, 500);
         }
+        return response()->json('สำเร็จ', 200);
     }
 
     public function deleteAdmission(Request $request)
