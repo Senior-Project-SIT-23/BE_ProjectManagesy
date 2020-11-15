@@ -14,13 +14,13 @@ class ActivityRepository implements ActivityRepositoryInterface
 {
     public function createActivity($data)
     {
-        
+
         $activity = new ActivityStudent;
-        $activity->activity_student_name = $data['activity_student_name'];
-        $activity->activity_student_year = $data['activity_student_year'];
-        $activity->activity_student_major = $data['activity_student_major'];
-        $activity->activity_student_file_name = $data['activity_student_file_name'];
-        $activity->save();
+        // $activity->activity_student_name = $data['activity_student_name'];
+        // $activity->activity_student_year = $data['activity_student_year'];
+        // $activity->activity_student_major = $data['activity_student_major'];
+        // $activity->activity_student_file_name = $data['activity_student_file_name'];
+        // $activity->save();
 
         foreach ($data['activity_student_file'] as  $value) {
             if (
@@ -28,6 +28,14 @@ class ActivityRepository implements ActivityRepositoryInterface
                 && $value['data_degree'] && $value['data_school_name']
                 && $value['data_email'] && $value['data_tel']
             ) {
+
+                // $activity = new ActivityStudent;
+                $activity->activity_student_name = $data['activity_student_name'];
+                $activity->activity_student_year = $data['activity_student_year'];
+                $activity->activity_student_major = $data['activity_student_major'];
+                $activity->activity_student_file_name = $data['activity_student_file_name'];
+                $activity->save();
+
 
                 $activity_student_file = new ActivityStudentFile();
                 $activity_student_file->data_first_name = $value['data_first_name'];
