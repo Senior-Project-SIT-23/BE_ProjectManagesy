@@ -42,8 +42,10 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        $this->activity->createActivity($data);
-
+        $res = $this->activity->createActivity($data);
+        if ($res) {
+            return response()->json($res, 500);
+        }
         return response()->json('สำเร็จ', 200);
     }
 
