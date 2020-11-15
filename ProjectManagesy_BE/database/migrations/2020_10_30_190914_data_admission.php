@@ -22,7 +22,7 @@ class DataAdmission extends Migration
             $table->string('data_major', 100);
             $table->string('data_gpax', 100);
             $table->string('data_email', 100);
-            $table->string('data_phone', 10);
+            $table->string('data_tel', 10);
             $table->string('admission_name', 100);
             $table->string('round_name', 100);
             $table->bigInteger('admission_id')->unsigned()->nullable();

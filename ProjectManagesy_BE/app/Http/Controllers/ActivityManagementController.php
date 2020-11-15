@@ -66,9 +66,13 @@ class ActivityManagementController extends Controller
         }
 
         $data = $request->all();
-        $this->activity->editActivity($data);
+        $activity = $this->activity->editActivity($data);
 
-        return response()->json('สำเร็จ', 200);
+        if ($activity == 'fail') {
+            return response()->json('!Can not edit!', 500);
+        } else {
+            return response()->json('สำเร็จ', 200);
+        }
     }
 
     public function indexStudentAllActivity()
@@ -90,19 +94,20 @@ class ActivityManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-    public function readFileStudentActivity($activity_id){
+    public function readFileStudentActivity($activity_id)
+    {
         $activity = $this->activity->getAllFileStudentActivity($activity_id);
         return response()->json($activity, 200);
-
     }
 
     //count
-    public function countStudentAllActivity($activity_id){
+    public function countStudentAllActivity($activity_id)
+    {
         $activity = $this->activity->countActivity($activity_id);
         return response()->json($activity, 200);
     }
 
-    
+
 
     public function incrementalHash($len = 5)
     {

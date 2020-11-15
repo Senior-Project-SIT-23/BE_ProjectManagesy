@@ -20,39 +20,27 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         $admission->admission_file_name = $data['admission_file_name'];
         $admission->save();
 
-        foreach ($data['admission_file_name'] as  $value) {
-            if (
-                $value['admission_file_name'] && $value['admission_file']
-                && $value['keep_file_name']
-            ) {
-
-                $admission_file = new AdmissionFile();
-                $admission_file->admission_file_name = $value['admission_file_name'];
-                $admission_file->admission_file = $value['admission_file'];
-                $admission_file->keep_file_name = $value['keep_file_name'];
-                $admission_file->admission_id = $value['admission_id'];
-                $admission->save();
-            } else {
-                AdmissionFile::where('admission_id', $admission->id)->delete();
+        if ($data['admission_file']) {
+            foreach ($data['admission_file'] as  $value) {
+                if (
+                    $value['data_first_name'] && $value['data_surname']
+                    && $value['data_school_name'] && $value['data_gpax']
+                    && $value['data_email'] && $value['data_tel']
+                ) {
+                    $admission_file = new AdmissionFile();
+                    $admission_file->data_first_name = $value['data_first_name'];
+                    $admission_file->data_surname = $value['data_surname'];
+                    $admission_file->data_school_name = $value['data_school_name'];
+                    $admission_file->data_gpax = $value['data_gpax'];
+                    $admission_file->data_email = $value['data_email'];
+                    $admission_file->data_tel = $value['data_tel'];
+                    $admission_file->admission_id = $admission->id;
+                    $admission_file->save();
+                } else {
+                    Admission::where('admission_id', $admission->id)->delete();
+                }
             }
         }
-
-        // $admission_id = $admission->id;
-
-        // $temp_name = $data['admission_file']->getClientOriginalName(); //เอาชื่อไฟล์ที่เก็บอยุ่ในvalueมาเก็บไว้ในtempname
-        // $name = pathinfo($temp_name, PATHINFO_FILENAME); //เก็บชื่อของไฟล์
-        // $extension = pathinfo($temp_name, PATHINFO_EXTENSION); //เก็บนามสกุล
-        // $custom_file_name = $name . "_" . $this->incrementalHash() . ".$extension";
-        // $path = $data['admission_file']->storeAs('/admission', $custom_file_name); // เก็บไว้ในไฟล์โฟลเดอร์ของbackend, /admission คือโฟลเดอร์ที่จะเก็บ สร้างauto
-
-        // $admission_file = new AdmissionFile();
-        // $admission_file->admission_file_name = $temp_name;
-        // $admission_file->admission_file = $path;
-        // $admission_file->keep_file_name = $custom_file_name;
-        // $admission_file->admission_id = $admission_id;
-        // $admission_file->save();
-
-        // return $admission_file;
     }
 
     public function getAllAdmission()
@@ -85,7 +73,6 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     {
         $admission_old = Admission::where('admission_id', $data['admission_id'])->first();
 
-
         Admission::where('admission_id', $data['admission_id'])->update([
             'admission.admission_name' => $data['admission_name'],
             'admission.round_name' => $data['round_name'],
@@ -93,23 +80,27 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             'admission.admission_year' => $data['admission_year']
         ]);
 
-        if ($data['admission_file_name']) {
+        if ($data['admission_file']) {
             Admission::where('admisson_id', $data['admisson_id'])
                 ->update([
-                    'admisson.activity_student_file_name' => $data['admission_file_name']
+                    'admisson.admission_file_name' => $data['admission_file_name']
                 ]);
             Admission::where('admisson_id', $data['admisson_id'])->delete();
             foreach ($data['admission_file'] as  $value) {
                 if (
                     $value['data_first_name'] && $value['data_surname']
-                    && $value['data_degree'] && $value['data_school_name']
+                    && $value['data_school_name'] && $value['data_gpax']
                     && $value['data_email'] && $value['data_tel']
                 ) {
                     $admission_file = new AdmissionFile();
-                    $admission_file->admission_file_name = $value['admission_file_name'];
-                    $admission_file->admission_file = $value['admission_file'];
-                    $admission_file->keep_file_name = $value['keep_file_name'];
+                    $admission_file->data_first_name = $value['data_first_name'];
+                    $admission_file->data_surname = $value['data_surname'];
+                    $admission_file->data_school_name = $value['data_school_name'];
+                    $admission_file->data_gpax = $value['data_gpax'];
+                    $admission_file->data_email = $value['data_email'];
+                    $admission_file->data_tel = $value['data_tel'];
                     $admission_file->admission_id = $value['admission_id'];
+                    $admission_file->save();
                 } else {
                     Admission::where('admisson_id', $data['admisson_id'])->update([
                         'admisson.admission_name' => $admission_old->admission_name,
