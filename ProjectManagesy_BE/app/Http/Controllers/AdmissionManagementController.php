@@ -79,7 +79,7 @@ class AdmissionManagementController extends Controller
         $admission = $this->admission->editAdmission($data);
 
         if ($admission == 'Fail') {
-            return response()->json('!Can not edit!', 200);
+            return response()->json('!Can not edit!', 500);
         } else {
             return response()->json('สำเร็จ', 200);
         }
