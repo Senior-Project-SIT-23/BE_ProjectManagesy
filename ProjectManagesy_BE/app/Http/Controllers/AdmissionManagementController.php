@@ -25,7 +25,6 @@ class AdmissionManagementController extends Controller
             'required' => 'The :attribute field is required.',
         ];
 
-
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
             'admission_name' => 'required',
@@ -43,16 +42,6 @@ class AdmissionManagementController extends Controller
         $this->admission->createAdmission($data);
 
         return response()->json('สำเร็จ', 200);
-
-        // $file_name = $request->file('admission_file')->getClientOriginalName();
-        // $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        // $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
-
-        // $import = Excel::import(new DataAdmissionImport($admission_file->id, $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('admission_file')
-        //     ->storeAs('admission_csv', "$file_name_random"));
-
-
-        // return response()->json('สำเร็จ', 200);
     }
 
     public function indexAllAdmission()
@@ -73,7 +62,6 @@ class AdmissionManagementController extends Controller
             'required' => 'The :attribute field is required.',
         ];
 
-
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
             'admission_id' => 'required',
@@ -88,17 +76,13 @@ class AdmissionManagementController extends Controller
         }
 
         $data = $request->all();
-        $this->admission->editAdmission($data);
+        $admission = $this->admission->editAdmission($data);
 
-        // if ($request->file('new_admission_file')) {
-        //     $file_name = $request->file('new_admission_file')->getClientOriginalName();
-        //     $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        //     $file_name_random = $file_name . "_" . $this->incrementalHash() . ".$extension";
-
-        //     $import = Excel::import(new DataAdmissionImport($data['admission_id'], $data['admission_name'], $data['round_name'], $data['admission_major'], $data['admission_year'], $file_name, $file_name_random), $request->file('new_admission_file')
-        //         ->storeAs('admission_csv', "$file_name_random"));
-        // }
-        return response()->json('สำเร็จ', 200);
+        if ($admission == 'Fail') {
+            return response()->json('!Can not edit!', 200);
+        } else {
+            return response()->json('สำเร็จ', 200);
+        }
     }
 
     public function deleteAdmission(Request $request)
@@ -112,8 +96,6 @@ class AdmissionManagementController extends Controller
     {
         $admission = $this->admission->getAllFileAdmission($admission_id);
         return response()->json($admission, 200);
-
-
     }
 
     public function incrementalHash($len = 5)

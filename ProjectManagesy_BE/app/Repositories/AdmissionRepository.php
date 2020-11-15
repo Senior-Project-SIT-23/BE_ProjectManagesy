@@ -85,13 +85,13 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 ->update([
                     'admisson.admission_file_name' => $data['admission_file_name']
                 ]);
-            Admission::where('admisson_id', $data['admisson_id'])->delete();
             foreach ($data['admission_file'] as  $value) {
                 if (
                     $value['data_first_name'] && $value['data_surname']
                     && $value['data_school_name'] && $value['data_gpax']
                     && $value['data_email'] && $value['data_tel']
                 ) {
+                    Admission::where('admisson_id', $data['admisson_id'])->delete();
                     $admission_file = new AdmissionFile();
                     $admission_file->data_first_name = $value['data_first_name'];
                     $admission_file->data_surname = $value['data_surname'];
@@ -106,8 +106,10 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                         'admisson.admission_name' => $admission_old->admission_name,
                         'admisson.round_name' => $admission_old->round_name,
                         'admisson.admission_major' => $admission_old->admission_major,
-                        'admisson.admission_year' => $admission_old->admission_year
+                        'admisson.admission_year' => $admission_old->admission_year,
+                        'admisson.admission_file_name' => $admission_old->admission_file_name
                     ]);
+                    return 'Fail';
                 }
             }
         }
