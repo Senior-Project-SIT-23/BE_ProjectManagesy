@@ -18,6 +18,7 @@ class AdmissionFile extends Migration
             $table->string('data_first_name',100);
             $table->string('data_surname',100);
             $table->string('data_school_name',100);
+            $table->string('data_programme', 100);
             $table->string('data_gpax',100);
             $table->string('data_email',100);
             $table->string('data_tel',100);

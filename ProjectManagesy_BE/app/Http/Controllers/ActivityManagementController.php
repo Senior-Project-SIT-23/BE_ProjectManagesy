@@ -49,6 +49,8 @@ class ActivityManagementController extends Controller
                 'data_surname' => 'required',
                 'data_degree' => 'required',
                 'data_school_name' => 'required',
+                'data_programme' => 'required',
+                'data_gpax' => 'required',
                 'data_email' => 'required',
                 'data_tel' => 'required'
             ], $messages);
@@ -82,13 +84,15 @@ class ActivityManagementController extends Controller
 
         $data = $request->all();
 
-        if($data['activity_student_file']){
+        if ($data['activity_student_file']) {
             foreach ($data['activity_student_file'] as $value) {
                 $validator2 =  Validator::make($value, [
                     'data_first_name' => 'required',
                     'data_surname' => 'required',
                     'data_degree' => 'required',
                     'data_school_name' => 'required',
+                    'data_programme' => 'required',
+                    'data_gpax' => 'required',
                     'data_email' => 'required',
                     'data_tel' => 'required'
                 ], $messages);

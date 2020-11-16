@@ -27,6 +27,8 @@ class ActivityRepository implements ActivityRepositoryInterface
             $activity_student_file->data_surname = $value['data_surname'];
             $activity_student_file->data_degree = $value['data_degree'];
             $activity_student_file->data_school_name = $value['data_school_name'];
+            $activity_student_file->data_programme = $value['data_programme'];
+            $activity_student_file->data_gpax = $value['data_gpax'];
             $activity_student_file->data_email = $value['data_email'];
             $activity_student_file->data_tel = $value['data_tel'];
             $activity_student_file->activity_student_id = $activity->id;
@@ -51,6 +53,8 @@ class ActivityRepository implements ActivityRepositoryInterface
                 $activity_student_file->data_surname = $value['data_surname'];
                 $activity_student_file->data_degree = $value['data_degree'];
                 $activity_student_file->data_school_name = $value['data_school_name'];
+                $activity_student_file->data_programme = $value['data_programme'];
+                $activity_student_file->data_gpax = $value['data_gpax'];
                 $activity_student_file->data_email = $value['data_email'];
                 $activity_student_file->data_tel = $value['data_tel'];
                 $activity_student_file->activity_student_id = $data['activity_student_id'];

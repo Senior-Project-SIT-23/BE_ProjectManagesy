@@ -46,6 +46,7 @@ class AdmissionManagementController extends Controller
                 'data_first_name' => 'required',
                 'data_surname' => 'required',
                 'data_school_name' => 'required',
+                'data_programme' => 'required',
                 'data_gpax' => 'required',
                 'data_email' => 'required',
                 'data_tel' => 'required'
@@ -98,6 +99,7 @@ class AdmissionManagementController extends Controller
                     'data_first_name' => 'required',
                     'data_surname' => 'required',
                     'data_school_name' => 'required',
+                    'data_programme' => 'required',
                     'data_gpax' => 'required',
                     'data_email' => 'required',
                     'data_tel' => 'required'

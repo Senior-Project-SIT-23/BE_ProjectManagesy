@@ -26,6 +26,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 $admission_file->data_first_name = $value['data_first_name'];
                 $admission_file->data_surname = $value['data_surname'];
                 $admission_file->data_school_name = $value['data_school_name'];
+                $admission_file->data_programme = $value['data_programme'];
                 $admission_file->data_gpax = $value['data_gpax'];
                 $admission_file->data_email = $value['data_email'];
                 $admission_file->data_tel = $value['data_tel'];
@@ -75,6 +76,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 $admission_file->data_first_name = $value['data_first_name'];
                 $admission_file->data_surname = $value['data_surname'];
                 $admission_file->data_school_name = $value['data_school_name'];
+                $admission_file->data_programme = $value['data_programme'];
                 $admission_file->data_gpax = $value['data_gpax'];
                 $admission_file->data_email = $value['data_email'];
                 $admission_file->data_tel = $value['data_tel'];
