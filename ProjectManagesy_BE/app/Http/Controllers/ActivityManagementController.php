@@ -60,6 +60,7 @@ class ActivityManagementController extends Controller
         }
 
         $this->activity->createActivity($data);
+        $this->activity->createInformationStudentActivity($data);
 
         return response()->json('สำเร็จ', 200);
     }

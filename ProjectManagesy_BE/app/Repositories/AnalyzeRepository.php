@@ -4,8 +4,10 @@ namespace App\Repositories;
 
 
 use App\Model\ActivityStudent;
+use App\Model\ActivityStudentFile;
 use App\Model\DataAdmission;
 use App\Model\DataStudentAdmission;
+use App\Model\InformationStudent;
 
 class AnalyzeRepository implements AnalyzeRepositoryInterface
 {
@@ -23,9 +25,27 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         return $data;
     }
 
-    public function getStudent()
+    public function getAllStudent()
     {
-        $student = DataStudentAdmission::join('');
+        $student = InformationStudent::all();
+
+        return $student;
+    }
+
+    public function getStudent($data_first_name, $data_surname)
+    {
+        $student = InformationStudent::where('data_first_name', $data_first_name)
+            ->where('data_surname', $data_surname)->first();
+
+        $activity_file = ActivityStudentFile::where('data_first_name', $student->data_first_name)
+            ->where('data_surname', $student->data_surname)->get();
+
+        foreach ($activity_file as $value) {
+            dd($value['activity_student_id']);
+            $activity = ActivityStudent::where('activity_student_id', $value['activity_student_id'])->get();
+        }
+
+        $student->activity = $activity;
 
         return $student;
     }

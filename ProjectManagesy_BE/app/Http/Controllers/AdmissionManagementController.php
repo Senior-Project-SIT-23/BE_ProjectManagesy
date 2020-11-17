@@ -57,6 +57,8 @@ class AdmissionManagementController extends Controller
         }
 
         $this->admission->createAdmission($data);
+        $this->admission->createInformationStudentAdmission($data);
+
         return response()->json('สำเร็จ', 200);
     }
 

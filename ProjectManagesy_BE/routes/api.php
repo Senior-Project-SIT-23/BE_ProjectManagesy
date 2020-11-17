@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-// Route::group(['middleware' => ['checkauth']], function () {
+Route::group(['middleware' => ['checkauth']], function () {
 
     // Activity
     //Student
@@ -31,10 +31,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::get('/activity/student/{activity_id}', 'ActivityManagementController@indexStudentActivity'); //ดู Activity_id
     Route::get('/activity/student/readfilename/{activity_id}', 'ActivityManagementController@readFileStudentActivity'); //ดึงข้อมูลในไฟล์มาแสดง
 
-
     //count
     // Route::get('/activity/student/count', 'ActivityManagementController@countStudentAllActivity'); //count ข้อมูล
-
 
     //Admission
     Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
@@ -45,11 +43,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
     Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
 
-    //
+    //analyze
     Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
-    Route::get('/student', 'AnalyzeController@indexStudent');
+    Route::get('/student', 'AnalyzeController@indexAllStudent');
+    Route::get('/student/{data_first_name}/{data_surname}', 'AnalyzeController@indexStudent');
 
-// });
+    //matching
+    Route::get('/matchingfile', 'MatchingController@indexmatchingActivityAndAdimssion');
+
+
+
+});
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');
