@@ -45,6 +45,7 @@ class ActivityManagementController extends Controller
 
         foreach ($data['activity_student_file'] as $value) {
             $validator2 =  Validator::make($value, [
+                'data_id' => 'required',
                 'data_first_name' => 'required',
                 'data_surname' => 'required',
                 'data_degree' => 'required',
@@ -59,8 +60,8 @@ class ActivityManagementController extends Controller
             }
         }
 
-        $this->activity->createActivity($data);
         $this->activity->createInformationStudentActivity($data);
+        $this->activity->createActivity($data);
 
         return response()->json('สำเร็จ', 200);
     }
@@ -88,6 +89,7 @@ class ActivityManagementController extends Controller
         if ($data['activity_student_file']) {
             foreach ($data['activity_student_file'] as $value) {
                 $validator2 =  Validator::make($value, [
+                    'data_id' => 'required',
                     'data_first_name' => 'required',
                     'data_surname' => 'required',
                     'data_degree' => 'required',

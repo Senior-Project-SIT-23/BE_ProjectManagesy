@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['checkauth']], function () {
+// Route::group(['middleware' => ['checkauth']], function () {
 
     // Activity
     //Student
@@ -46,14 +46,13 @@ Route::group(['middleware' => ['checkauth']], function () {
     //analyze
     Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
     Route::get('/student', 'AnalyzeController@indexAllStudent');
-    Route::get('/student/{data_first_name}/{data_surname}', 'AnalyzeController@indexStudent');
 
     //matching
     Route::get('/matchingfile', 'MatchingController@indexmatchingActivityAndAdimssion');
 
 
 
-});
+// });
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');

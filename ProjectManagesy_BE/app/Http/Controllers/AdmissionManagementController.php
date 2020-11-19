@@ -43,6 +43,7 @@ class AdmissionManagementController extends Controller
 
         foreach ($data['admission_file'] as $value) {
             $validator2 =  Validator::make($value, [
+                'data_id' => 'required',
                 'data_first_name' => 'required',
                 'data_surname' => 'required',
                 'data_school_name' => 'required',
@@ -56,8 +57,8 @@ class AdmissionManagementController extends Controller
             }
         }
 
-        $this->admission->createAdmission($data);
         $this->admission->createInformationStudentAdmission($data);
+        $this->admission->createAdmission($data);
 
         return response()->json('สำเร็จ', 200);
     }

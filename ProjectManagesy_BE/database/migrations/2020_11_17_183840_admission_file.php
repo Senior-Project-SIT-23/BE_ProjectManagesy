@@ -15,6 +15,7 @@ class AdmissionFile extends Migration
     {
         Schema::create('admission_file', function (Blueprint $table){
             $table->bigIncrements('admission_file_id')->unsigned();
+            $table->string('data_id',100);
             $table->string('data_first_name',100);
             $table->string('data_surname',100);
             $table->string('data_school_name',100);
@@ -25,6 +26,7 @@ class AdmissionFile extends Migration
             $table->bigInteger('admission_id')->unsigned();
 
             $table->timestamps();
+            $table->foreign('data_id')->references('id')->on('information_student')->onDelete('cascade');
             $table->foreign('admission_id')->references('admission_id')->on('admission')->onDelete('cascade');
         });
     }

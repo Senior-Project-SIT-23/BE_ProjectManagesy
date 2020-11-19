@@ -15,6 +15,7 @@ class ActivityStudentFile extends Migration
     {
         Schema::create('activity_student_file', function (Blueprint $table) {
             $table->bigIncrements('activity_student_file_id');
+            $table->string('data_id', 13);
             $table->string('data_first_name', 100);
             $table->string('data_surname', 100);
             $table->string('data_degree', 100);
@@ -26,7 +27,7 @@ class ActivityStudentFile extends Migration
             $table->bigInteger('activity_student_id')->unsigned();
 
             $table->timestamps();
-
+            $table->foreign('data_id')->references('id')->on('information_student')->onDelete('cascade');
             $table->foreign('activity_student_id')->references('activity_student_id')->on('activity_student')->onDelete('cascade');
         });
     }

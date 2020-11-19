@@ -30,9 +30,4 @@ class AnalyzeController extends Controller
         return response()->json($student, 200);
     }
 
-    public function indexStudent($data_first_name,$data_surname)
-    {
-        $student = $this->analyze->getStudent($data_first_name,$data_surname);
-        return response()->json($student, 200);
-    }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-
 use App\Model\ActivityStudent;
 use App\Model\ActivityStudentFile;
+use App\Model\AdmissionFile;
 use App\Model\DataAdmission;
 use App\Model\DataStudentAdmission;
 use App\Model\InformationStudent;
@@ -29,23 +29,15 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
     {
         $student = InformationStudent::all();
 
-        return $student;
-    }
+        foreach ($student as $value) {
+            $activity_file = ActivityStudentFile::where('data_id', $value['id'])
+                ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
+            $admission_file = AdmissionFile::where('data_id', $value['id'])
+                ->join('admission', 'admission.admission_id', '=', 'admission_file.admission_id')->get();
 
-    public function getStudent($data_first_name, $data_surname)
-    {
-        $student = InformationStudent::where('data_first_name', $data_first_name)
-            ->where('data_surname', $data_surname)->first();
-
-        $activity_file = ActivityStudentFile::where('data_first_name', $student->data_first_name)
-            ->where('data_surname', $student->data_surname)->get();
-
-        foreach ($activity_file as $value) {
-            dd($value['activity_student_id']);
-            $activity = ActivityStudent::where('activity_student_id', $value['activity_student_id'])->get();
+            $value['activity'] = $activity_file;
+            $value['admission'] = $admission_file;
         }
-
-        $student->activity = $activity;
 
         return $student;
     }
