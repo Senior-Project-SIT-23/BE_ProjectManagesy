@@ -52,9 +52,9 @@ class ActivityRepository implements ActivityRepositoryInterface
                     'activity_student.activity_student_major' => $data['activity_student_major'],
                     'activity_student.activity_student_file_name' => $data['activity_student_file_name'],
                 ]);
+            ActivityStudentFile::where('activity_student_id', $data['activity_student_id'])->delete();
             foreach ($data['activity_student_file'] as $value) {
                 $check_student = InformationStudent::where('id', $value['data_id'])->first();
-                ActivityStudentFile::where('activity_student_id', $data['activity_student_id'])->delete();
                 if ($check_student) {
                     InformationStudent::where('id', $value['data_id'])
                         ->update([

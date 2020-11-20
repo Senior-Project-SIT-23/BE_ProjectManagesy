@@ -72,10 +72,9 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                     'admission.admission_year' => $data['admission_year'],
                     'admission.admission_file_name' => $data['admission_file_name'],
                 ]);
-
+            AdmissionFile::where('admission_id', $data['admission_id'])->delete();
             foreach ($data['admission_file'] as $value) {
                 $check_student = InformationStudent::where('id', $value['data_id'])->first();
-                AdmissionFile::where('admission_id', $data['admission_id'])->delete();
                 if ($check_student) {
                     InformationStudent::where('id', $value['data_id'])
                         ->update([

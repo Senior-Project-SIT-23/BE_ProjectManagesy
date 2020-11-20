@@ -49,8 +49,6 @@ Route::group(['middleware' => ['checkauth']], function () {
     //matching
     Route::get('/matchingfile', 'MatchingController@indexmatchingActivityAndAdimssion');
 
-
-
 });
 
 #ยิงLogin เพื่อเช็ด auth
