@@ -115,9 +115,9 @@ class ActivityManagementController extends Controller
         return response()->json($activity, 200);
     }
 
-    public function indexStudentActivity($activity_id)
+    public function indexALLActiviyNameList()
     {
-        $activity = $this->activity->getActivityById($activity_id);
+        $activity = $this->activity->getAllActivityNameList();
         return response()->json($activity, 200);
     }
 
@@ -126,12 +126,6 @@ class ActivityManagementController extends Controller
         $data = $request->all();
         $this->activity->deleteActivity($data);
         return response()->json('สำเร็จ', 200);
-    }
-
-    public function readFileStudentActivity($activity_id)
-    {
-        $activity = $this->activity->getAllFileStudentActivity($activity_id);
-        return response()->json($activity, 200);
     }
 
     //count

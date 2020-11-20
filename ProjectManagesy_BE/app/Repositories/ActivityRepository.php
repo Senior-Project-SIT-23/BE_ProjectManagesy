@@ -36,6 +36,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             $activity_student_file->data_gpax = $value['data_gpax'];
             $activity_student_file->data_email = $value['data_email'];
             $activity_student_file->data_tel = $value['data_tel'];
+            $activity_student_file->data_year = $data['activity_student_year'];
             $activity_student_file->activity_student_id = $activity->id;
             $activity_student_file->save();
         }
@@ -71,6 +72,7 @@ class ActivityRepository implements ActivityRepositoryInterface
                     $activity_student_file->data_gpax = $value['data_gpax'];
                     $activity_student_file->data_email = $value['data_email'];
                     $activity_student_file->data_tel = $value['data_tel'];
+                    $activity_student_file->data_year = $data['activity_student_year'];
                     $activity_student_file->activity_student_id = $data['activity_student_id'];
                     $activity_student_file->save();
                 } else {
@@ -96,6 +98,7 @@ class ActivityRepository implements ActivityRepositoryInterface
                     $activity_student_file->data_gpax = $value['data_gpax'];
                     $activity_student_file->data_email = $value['data_email'];
                     $activity_student_file->data_tel = $value['data_tel'];
+                    $activity_student_file->data_year = $data['activity_student_year'];
                     $activity_student_file->activity_student_id = $data['activity_student_id'];
                     $activity_student_file->save();
                 }
@@ -120,6 +123,8 @@ class ActivityRepository implements ActivityRepositoryInterface
                     'activity_student.activity_student_year' => $data['activity_student_year'],
                     'activity_student.activity_student_major' => $data['activity_student_major']
                 ]);
+            ActivityStudentFile::where('activity_student_id', $data['activity_student_id'])
+                ->update(['data_year' => $data['activity_student_year']]);
         }
 
 
@@ -197,22 +202,23 @@ class ActivityRepository implements ActivityRepositoryInterface
             $activity_file = ActivityStudentFile::where('activity_student_id', $value['activity_student_id'])->get();
             $value['activity_file'] = $activity_file;
         }
-
         return $activity;
     }
 
-    public function getActivityById($activity_id)
+    public function getAllActivityNameList()
     {
-        $activity = ActivityStudent::where('activity_student_id', $activity_id)->first();
+        $information_student = InformationStudent::all();
 
-        $attachment = ActivityStudentFile::where('activity_student_id', $activity_id)->get();
+        foreach ($information_student as $value) {
+            if ($value['num_of_activity'] != 0) {
+                $data[] = $value;
+            }
+        }
 
-        $activity->attachment = $attachment;
-
+        $sorted = collect($data)->sortBy('data_first_name');
+        $activity = $sorted->values()->all();
         return $activity;
     }
-
-
 
     public function deleteActivity($data)
     {
@@ -234,13 +240,6 @@ class ActivityRepository implements ActivityRepositoryInterface
                 }
             }
         }
-    }
-
-
-    public function getAllFileStudentActivity($activity_id)
-    {
-        $activity = DataActivityStudent::where('activity_student_id', $activity_id)->get();
-        return $activity;
     }
 
     public function createInformationStudentActivity($data)

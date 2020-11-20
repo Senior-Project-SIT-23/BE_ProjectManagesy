@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-// Route::group(['middleware' => ['checkauth']], function () {
+Route::group(['middleware' => ['checkauth']], function () {
 
     // Activity
     //Student
@@ -27,9 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::post('/activity/student/edit', 'ActivityManagementController@editStudentActivity'); //edit activity
     Route::post('/activity/student/delete', 'ActivityManagementController@deleteStudentActivity'); // delete activity
 
-    Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity
-    Route::get('/activity/student/{activity_id}', 'ActivityManagementController@indexStudentActivity'); //ดู Activity_id
-    Route::get('/activity/student/readfilename/{activity_id}', 'ActivityManagementController@readFileStudentActivity'); //ดึงข้อมูลในไฟล์มาแสดง
+    Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity ทั้งหมด
+    Route::get('/activity/student/name-list', 'ActivityManagementController@indexALLActiviyNameList'); //ดูรายชื่อ Activity ที่เลือก
 
     //count
     // Route::get('/activity/student/count', 'ActivityManagementController@countStudentAllActivity'); //count ข้อมูล
@@ -52,7 +51,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 
-// });
+});
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');

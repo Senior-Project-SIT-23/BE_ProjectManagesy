@@ -6,10 +6,9 @@ interface ActivityRepositoryInterface
 {
     public function createActivity($data);
     public function getAllActivity();
-    public function getActivityById($activity_id);
+    public function getAllActivityNameList();
     public function editActivity($data);
     public function deleteActivity($data);
-    public function getAllFileStudentActivity($activity_id);
     public function createInformationStudentActivity($data);
     public function countActivity($activity_id);
 }
