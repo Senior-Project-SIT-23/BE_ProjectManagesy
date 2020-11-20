@@ -5,6 +5,8 @@ namespace App\Repositories;
 
 use App\Model\Admission;
 use App\Model\AdmissionFile;
+use App\Model\CollegeStudent;
+use App\Model\CollegeStudentFile;
 use App\Model\DataAdmission;
 use App\Model\InformationStudent;
 use Illuminate\Notifications\Action;
@@ -98,7 +100,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                     $info_stu->id = $value['data_id'];
                     $info_stu->data_first_name = $value['data_first_name'];
                     $info_stu->data_surname = $value['data_surname'];
-                    $info_stu->data_degree = $value['data_degree'];
+                    $info_stu->data_degree = 'ม.6';
                     $info_stu->data_email = $value['data_email'];
                     $info_stu->data_school_name = $value['data_school_name'];
                     $info_stu->data_tel = $value['data_tel'];
@@ -139,6 +141,14 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 'admission.admission_major' => $data['admission_major'],
                 'admission.admission_year' => $data['admission_year']
             ]);
+        }
+
+        $college_student = CollegeStudent::all();
+        foreach ($college_student as $value) {
+            $check_college = CollegeStudentFile::where('college_student_id', $value['college_student_id'])->first();
+            if (!$check_college) {
+                CollegeStudent::where('college_student_id', $value['college_student_id'])->delete();
+            }
         }
 
         // if ($data['admission_file']) {
@@ -225,6 +235,14 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 if ($check_activity == 0 && $check_admission == 0) {
                     InformationStudent::where('id', $value['id'])->delete();
                 }
+            }
+        }
+
+        $college_student = CollegeStudent::all();
+        foreach ($college_student as $value) {
+            $check_college = CollegeStudentFile::where('college_student_id', $value['college_student_id'])->first();
+            if (!$check_college) {
+                CollegeStudent::where('college_student_id', $value['college_student_id'])->delete();
             }
         }
     }

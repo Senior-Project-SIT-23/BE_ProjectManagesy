@@ -21,33 +21,34 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['checkauth']], function () {
 
-    // Activity
-    //Student
-    Route::post('/activity/student', 'ActivityManagementController@storeStudentActivity'); //สร้าง activity
-    Route::post('/activity/student/edit', 'ActivityManagementController@editStudentActivity'); //edit activity
-    Route::post('/activity/student/delete', 'ActivityManagementController@deleteStudentActivity'); // delete activity
+// Activity
+//Student
+Route::post('/activity/student', 'ActivityManagementController@storeStudentActivity'); //สร้าง activity
+Route::post('/activity/student/edit', 'ActivityManagementController@editStudentActivity'); //edit activity
+Route::post('/activity/student/delete', 'ActivityManagementController@deleteStudentActivity'); // delete activity
 
-    Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity ทั้งหมด
-    Route::get('/activity/student/name-list', 'ActivityManagementController@indexALLActiviyNameList'); //ดูรายชื่อ Activity ที่เลือก
+Route::get('/activity/student', 'ActivityManagementController@indexStudentAllActivity'); //ดู Activity ทั้งหมด
+Route::get('/activity/student/name-list', 'ActivityManagementController@indexALLActiviyNameList'); //ดูรายชื่อ Activity ที่เลือก
 
-    //count
-    // Route::get('/activity/student/count', 'ActivityManagementController@countStudentAllActivity'); //count ข้อมูล
+//Admission
+Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
+Route::post('/admission/edit', 'AdmissionManagementController@editAdmission'); //edit admision
+Route::post('/admission/delete', 'AdmissionManagementController@deleteAdmission'); // delete admission
 
-    //Admission
-    Route::post('/admission', 'AdmissionManagementController@storeAdmission'); //สร้าง admission
-    Route::post('/admission/edit', 'AdmissionManagementController@editAdmission'); //edit admision
-    Route::post('/admission/delete', 'AdmissionManagementController@deleteAdmission'); // delete admission
+Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
+Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
+Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
 
-    Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
-    Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
-    Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
+//College Student
+Route::post('/college-student', 'CollegeStudentController@storeCollegeStudent'); //สร้าง college student
+Route::post('/college-student/edit', 'CollegeStudentController@editCollegeStudent'); //แก้ไข college student
+Route::post('/college-student/delete', 'CollegeStudentController@deletetCollegeStudent'); //ลบ college student
+//analyze
+// Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
+Route::get('/student', 'AnalyzeController@indexAllStudent');
 
-    //analyze
-    Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
-    Route::get('/student', 'AnalyzeController@indexAllStudent');
 
-    //matching
-    Route::get('/matchingfile', 'MatchingController@indexmatchingActivityAndAdimssion');
+
 
 });
 

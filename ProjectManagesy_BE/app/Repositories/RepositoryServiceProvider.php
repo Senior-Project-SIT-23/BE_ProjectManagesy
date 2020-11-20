@@ -24,6 +24,9 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Repositories\AnalyzeRepositoryInterface',
             'App\Repositories\AnalyzeRepository'
         );
-
+        $this->app->bind(
+            'App\Repositories\CollegeStudentRepositoryInterface',
+            'App\Repositories\CollegeStudentRepository'
+        );
     }
 }

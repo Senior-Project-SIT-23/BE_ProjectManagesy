@@ -28,8 +28,8 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
     public function getAllStudent()
     {
         $student = InformationStudent::all();
-
         foreach ($student as $value) {
+
             $activity_file = ActivityStudentFile::where('data_id', $value['id'])
                 ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
             $admission_file = AdmissionFile::where('data_id', $value['id'])
