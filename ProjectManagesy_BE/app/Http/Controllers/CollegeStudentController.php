@@ -54,8 +54,13 @@ class CollegeStudentController extends Controller
             }
         }
 
-        $this->colleage_student->createCollegeStudent($data);
-        return response()->json('สำเร็จ', 200);
+        $college = $this->colleage_student->createCollegeStudent($data);
+
+        if ($college == 'Fail') {
+            return response()->json('Not Success, college student duplicate on file or do not have in admission', 500);
+        } else {
+            return response()->json('สำเร็จ', 200);
+        }
     }
 
     public function editCollegeStudent(Request $request)
@@ -117,5 +122,11 @@ class CollegeStudentController extends Controller
         $data = $request->all();
         $this->colleage_student->deleteCollegeStudent($data);
         return response()->json('สำเร็จ', 200);
+    }
+
+    public function indexAllCollegeStudent()
+    {
+        $college = $this->colleage_student->getAllCollegeStudent();
+        return response()->json($college, 200);
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Model\ActivityStudentFile;
 use App\Model\CollegeStudent;
 use App\Model\CollegeStudentFile;
+use Throwable;
 
 class CollegeStudentRepository implements CollegeStudentRepositoryInterface
 {
@@ -15,7 +17,7 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
         $college_student->college_student_file_name = $data['college_student_file_name'];
         $college_student->save();
 
-        try{
+        try {
             foreach ($data['college_student_file'] as $value) {
                 $college_student_file = new CollegeStudentFile;
                 $college_student_file->data_student_id = $value['data_student_id'];
@@ -30,29 +32,13 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
                 $college_student_file->college_student_id = $college_student->id;
                 $college_student_file->save();
             }
-        }catch(\Throwable $th){
-            // $responseBody = $th->getResponse();
-            // $body = json_decode($responseBody->getBody(), true);
-            // return 
-        }
-        
-        foreach ($data['college_student_file'] as $value) {
-            $college_student_file = new CollegeStudentFile;
-            $college_student_file->data_student_id = $value['data_student_id'];
-            $college_student_file->data_id = $value['data_id'];
-            $college_student_file->data_entrance_year = $value['data_entrance_year'];
-            $college_student_file->data_first_name = $value['data_first_name'];
-            $college_student_file->data_surname = $value['data_surname'];
-            $college_student_file->data_major = $value['data_major'];
-            $college_student_file->data_school_name = $value['data_school_name'];
-            $college_student_file->data_admission = $value['data_admission'];
-            $college_student_file->data_gpax = $value['data_gpax'];
-            $college_student_file->college_student_id = $college_student->id;
-            $college_student_file->save();
-        }
-        $check_college_student = CollegeStudentFile::where('college_student_id', $college_student->id)->first();
-        if (!$check_college_student) {
-            CollegeStudentFile::where('college_student_id', $college_student->id)->delete();
+        } catch (Throwable $e) {
+            $check_college_student = CollegeStudentFile::where('college_student_id', $college_student->id)->first();
+            if ($check_college_student == null) {
+                CollegeStudent::where('college_student_id', $college_student->id)->delete();
+            }
+
+            return 'Fail';
         }
     }
 
@@ -95,5 +81,22 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
             CollegeStudent::where('college_student_id', $value)->delete();
             CollegeStudentFile::where('college_student_id', $value)->delete();
         }
+    }
+
+    public function getAllCollegeStudent()
+    {
+        $college_student = CollegeStudentFile::join('college_student', 'college_student.college_student_id', '=', 'college_student_file.college_student_id')->get();
+
+        $sorted = collect($college_student)->sortBy('data_studet_id');
+        $college = $sorted->values()->all();
+
+        foreach ($college as $value) {
+            $activity = ActivityStudentFile::where('data_id', $value['data_id'])
+                ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
+            $value['activity'] = $activity;
+        }
+
+
+        return $college;
     }
 }

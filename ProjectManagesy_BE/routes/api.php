@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['checkauth']], function () {
+// Route::group(['middleware' => ['checkauth']], function () {
 
 // Activity
 //Student
@@ -43,6 +43,9 @@ Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementControll
 Route::post('/college-student', 'CollegeStudentController@storeCollegeStudent'); //สร้าง college student
 Route::post('/college-student/edit', 'CollegeStudentController@editCollegeStudent'); //แก้ไข college student
 Route::post('/college-student/delete', 'CollegeStudentController@deletetCollegeStudent'); //ลบ college student
+
+Route::get('/college-student', 'CollegeStudentController@indexAllCollegeStudent'); //ดู college student
+
 //analyze
 // Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
 Route::get('/student', 'AnalyzeController@indexAllStudent');
@@ -50,7 +53,7 @@ Route::get('/student', 'AnalyzeController@indexAllStudent');
 
 
 
-});
+// });
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');
