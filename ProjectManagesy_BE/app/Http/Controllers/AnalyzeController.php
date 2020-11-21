@@ -18,9 +18,9 @@ class AnalyzeController extends Controller
         $this->analyze = $analyze;
     }
 
-    public function indexNumOfActivityAndAdmission($year)
+    public function indexAnalyzeByYear($year)
     {
-        $activity = $this->analyze->numOfActivityAndAdmission($year);
+        $activity = $this->analyze->getAnalyzeByYear($year);
         return response()->json($activity, 200);
     }
 

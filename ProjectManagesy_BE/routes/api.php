@@ -47,10 +47,8 @@ Route::post('/college-student/delete', 'CollegeStudentController@deletetCollegeS
 Route::get('/college-student', 'CollegeStudentController@indexAllCollegeStudent'); //ดู college student
 
 //analyze
-// Route::get('/analyze/{year}', 'AnalyzeController@indexNumOfActivityAndAdmission');
-Route::get('/student', 'AnalyzeController@indexAllStudent');
-
-
+Route::get('/student', 'AnalyzeController@indexAllStudent'); //ดูข้อมูลนักเรียน
+Route::get('/analyze/{year}', 'AnalyzeController@indexAnalyzeByYear');
 
 
 // });

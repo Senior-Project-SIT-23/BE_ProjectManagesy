@@ -4,6 +4,6 @@ namespace App\Repositories;
 
 interface AnalyzeRepositoryInterface
 {
-    public function numOfActivityAndAdmission($year);
+    public function getAnalyzeByYear($year);
     public function getAllStudent();
 }
