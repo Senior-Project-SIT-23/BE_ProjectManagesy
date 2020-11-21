@@ -85,18 +85,34 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
 
     public function getAllCollegeStudent()
     {
-        $college_student = CollegeStudentFile::join('college_student', 'college_student.college_student_id', '=', 'college_student_file.college_student_id')->get();
+        // $college_student = CollegeStudentFile::join('college_student', 'college_student.college_student_id', '=', 'college_student_file.college_student_id')->get();
 
-        $sorted = collect($college_student)->sortBy('data_studet_id');
-        $college = $sorted->values()->all();
+        // $sorted = collect($college_student)->sortBy('data_studet_id');
+        // $college = $sorted->values()->all();
 
-        foreach ($college as $value) {
-            $activity = ActivityStudentFile::where('data_id', $value['data_id'])
-                ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
-            $value['activity'] = $activity;
+        // foreach ($college as $value) {
+        //     $activity = ActivityStudentFile::where('data_id', $value['data_id'])
+        //         ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
+        //     $value['activity'] = $activity;
+        // }
+
+        // return $college;
+
+        $college_student = CollegeStudent::all();
+
+        foreach ($college_student as $value) {
+            $college_student_file = CollegeStudentFile::where('college_student_id', $value['college_student_id'])->get();
+            $value['college_student_file'] = $college_student_file;
+
+            foreach ($college_student_file as $values) {
+                $activity = ActivityStudentFile::where('data_id', $values['data_id'])
+                    ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
+                $values['activity'] = $activity;
+            }
         }
 
 
-        return $college;
+
+        return $college_student;
     }
 }
