@@ -85,19 +85,6 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
 
     public function getAllCollegeStudent()
     {
-        // $college_student = CollegeStudentFile::join('college_student', 'college_student.college_student_id', '=', 'college_student_file.college_student_id')->get();
-
-        // $sorted = collect($college_student)->sortBy('data_studet_id');
-        // $college = $sorted->values()->all();
-
-        // foreach ($college as $value) {
-        //     $activity = ActivityStudentFile::where('data_id', $value['data_id'])
-        //         ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
-        //     $value['activity'] = $activity;
-        // }
-
-        // return $college;
-
         $college_student = CollegeStudent::all();
 
         foreach ($college_student as $value) {
@@ -107,6 +94,7 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
             foreach ($college_student_file as $values) {
                 $activity = ActivityStudentFile::where('data_id', $values['data_id'])
                     ->join('activity_student', 'activity_student.activity_student_id', '=', 'activity_student_file.activity_student_id')->get();
+                $values['num_of_activity'] = count($activity);
                 $values['activity'] = $activity;
             }
         }
