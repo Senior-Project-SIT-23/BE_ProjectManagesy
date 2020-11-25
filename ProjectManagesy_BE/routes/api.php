@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['checkauth']], function () {
+// Route::group(['middleware' => ['checkauth']], function () {
 
     // Activity
     //Student
@@ -49,7 +49,9 @@ Route::group(['middleware' => ['checkauth']], function () {
     //analyze
     Route::get('/student', 'AnalyzeController@indexAllStudent'); //ดูข้อมูลนักเรียน
     Route::get('/analyze/{year}', 'AnalyzeController@indexAnalyzeByYear');
-});
+    
+    Route::get('/analyze/school/{year}', 'AnalyzeController@indexAnalyzeSchoolByYear');
+// });
 
 #ยิงLogin เพื่อเช็ด auth
 Route::post('/check-authenication', 'LoginController@checkAuthentication');

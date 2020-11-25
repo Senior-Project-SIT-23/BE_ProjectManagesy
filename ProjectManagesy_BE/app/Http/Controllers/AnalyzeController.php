@@ -29,5 +29,9 @@ class AnalyzeController extends Controller
         $student = $this->analyze->getAllStudent();
         return response()->json($student, 200);
     }
+    public function indexAnalyzeSchoolByYear($year){
+        $admission = $this->analyze->getAnalyzeSchoolByYear($year);
+        return response()->json($admission, 200);
+    }
 
 }
