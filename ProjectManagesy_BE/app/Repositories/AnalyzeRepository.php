@@ -112,11 +112,14 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
                 } else {
                     $temp["$item[data_school_name]"]['DSI'] += $item['num_of_student'];
                 }
+                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_student'];
+
             } else {
                 $temp["$item[data_school_name]"] = array();
                 $temp["$item[data_school_name]"]['IT'] = 0;
                 $temp["$item[data_school_name]"]['CS'] = 0;
                 $temp["$item[data_school_name]"]['DSI'] = 0;
+                $temp["$item[data_school_name]"]['SUM'] = 0;
                 $temp["$item[data_school_name]"]['data_school_name'] = $item["data_school_name"];
 
                 if ($temp["$item[data_school_name]"]['IT'] == 'IT') {
@@ -126,6 +129,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
                 } else {
                     $temp["$item[data_school_name]"]['DSI'] += $item['num_of_student'];
                 }
+                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_student'];
             }
         }
 
