@@ -16,8 +16,8 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
 {
     public function getAnalyzeByYear($year)
     {
-
         $college_student_sit = CollegeStudentFile::where('data_entrance_year', $year)->get();
+
         $college_student_it = CollegeStudentFile::where('data_entrance_year', $year)
             ->where('data_major', 'IT')->get();
         $college_student_cs = CollegeStudentFile::where('data_entrance_year', $year)
@@ -30,6 +30,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
 
         $temp_admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
             ->selectRaw('count(admission.admission_major) as num_of_student, admission_file.data_school_name, admission.admission_major')
+            ->where("admission_year", $year)
             ->groupBy('admission_file.data_school_name')
             ->groupBy('admission_major')->get();
 
@@ -113,7 +114,6 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
                     $temp["$item[data_school_name]"]['DSI'] += $item['num_of_student'];
                 }
                 $temp["$item[data_school_name]"]['SUM']  += $item['num_of_student'];
-
             } else {
                 $temp["$item[data_school_name]"] = array();
                 $temp["$item[data_school_name]"]['IT'] = 0;
