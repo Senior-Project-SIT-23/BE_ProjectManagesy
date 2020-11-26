@@ -48,6 +48,17 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->groupBy('admission_name')
             ->groupBy('admission_major')
             ->get();
+
+
+        //เพิ่ม เรียกheader
+        $temp_header = ActivityStudent::where('activity_student_year', $year)
+            ->selectRaw('activity_student.activity_student_name')
+            ->where("activity_student_year", $year)
+            ->groupBy('activity_student_name')
+            ->groupBy('activity_student_major')
+            ->get();
+
+
         // dd($temp_admission_name);
 
         //school admission
@@ -86,28 +97,19 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         }
         //
 
-        //school activity
+
+
+        //SELECT activity_student_name FROM `activity_student` WHERE activity_student_year = 2563 คือ header เพื่อดูว่าในปีนี้มี activity อะไรบ้าง แล้วส่ง header นี้กลับไปด้วย
         $school = [];
         foreach ($temp_activity as $value) {
             if (Arr::has($school, "$value[data_school_name]")) {
-                array_push(
-                    $school["$value[data_school_name]"]['activity'],
-                    (object)[
-                        'activity_name' => $value['activity_student_name'],
-                        'amount' => $value['num_of_student']
-                    ]
-                );
-                $school["$value[data_school_name]"]['sum'] += $value['num_of_student'];
+                $school["$value[data_school_name]"]["$value[activity_student_name]"] = $value['num_of_student'];
+                $school["$value[data_school_name]"]['SUM'] += $value['num_of_student'];
             } else {
                 $school["$value[data_school_name]"] = array();
                 $school["$value[data_school_name]"]['data_school_name'] = $value["data_school_name"];
-                $school["$value[data_school_name]"]['sum'] = $value['num_of_student'];
-                $school["$value[data_school_name]"]['activity'] = (array)array(
-                    [
-                        'activity_name' => $value['activity_student_name'],
-                        'amount' => $value['num_of_student']
-                    ]
-                );
+                $school["$value[data_school_name]"]["$value[activity_student_name]"] = $value['num_of_student'];
+                $school["$value[data_school_name]"]['SUM'] = $value['num_of_student'];
             }
         }
 
@@ -115,6 +117,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         foreach ($school as $value) {
             array_push($data_school_activity, $value);
         }
+        dd($data_school_activity);
         //
 
         //school_admission_name
@@ -163,6 +166,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             "school_admission"  => $data_school_name,
             "school_activity"  => $data_school_activity,
             "school_admission_name"  => $data_school_admission_name,
+            "Header" => $temp_header //เรียกheader
 
         );
 
