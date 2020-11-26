@@ -117,7 +117,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         foreach ($school as $value) {
             array_push($data_school_activity, $value);
         }
-        dd($data_school_activity);
+        
         //
 
         //school_admission_name
