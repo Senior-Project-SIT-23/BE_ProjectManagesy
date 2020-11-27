@@ -6,6 +6,7 @@ use App\Model\ActivityStudent;
 use App\Model\ActivityStudentFile;
 use App\Model\Admission;
 use App\Model\AdmissionFile;
+use App\Model\CollegeStudent;
 use App\Model\InformationStudent;
 use App\Model\CollegeStudentFile;
 use Illuminate\Support\Arr;
@@ -58,6 +59,11 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->groupBy('activity_student_major')
             ->get();
 
+        $temp_college_student = CollegeStudentFile::where('data_entrance_year', $year)
+            ->selectRaw('data_school_name, data_major, count(data_major) as num_of_student ')
+            ->groupBy('data_school_name')
+            ->groupBy('data_major')
+            ->get();
 
         //school admission
         $temp = [];
@@ -95,8 +101,6 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         }
         //
 
-
-
         //SELECT activity_student_name FROM `activity_student` WHERE activity_student_year = 2563 คือ header เพื่อดูว่าในปีนี้มี activity อะไรบ้าง แล้วส่ง header นี้กลับไปด้วย
         $school = [];
         foreach ($temp_activity as $value) {
@@ -115,7 +119,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         foreach ($school as $value) {
             array_push($data_school_activity, $value);
         }
-        
+
         //
 
         //school_admission_name
@@ -154,6 +158,43 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         }
         //
 
+        //college student
+        $college = [];
+        foreach ($temp_college_student as $value) {
+            if (Arr::has($college, "$value[data_school_name]")) {
+                if ($value["data_major"] == 'IT') {
+                    $college["$value[data_school_name]"]['IT'] += $value['num_of_student'];
+                } else if ($value["data_major"] == 'CS') {
+                    $college["$value[data_school_name]"]['CS'] += $value['num_of_student'];
+                } else {
+                    $college["$value[data_school_name]"]['DSI'] += $value['num_of_student'];
+                }
+                $college["$value[data_school_name]"]['SUM']  += $value['num_of_student'];
+            } else {
+                $college["$value[data_school_name]"] = array();
+                $college["$value[data_school_name]"]['IT'] = 0;
+                $college["$value[data_school_name]"]['CS'] = 0;
+                $college["$value[data_school_name]"]['DSI'] = 0;
+                $college["$value[data_school_name]"]['SUM'] = 0;
+                $college["$value[data_school_name]"]['data_school_name'] = $value["data_school_name"];
+                if ($value["data_major"] == 'IT') {
+                    $college["$value[data_school_name]"]['IT'] += $value['num_of_student'];
+                } else if ($value["data_major"] == 'CS') {
+                    $college["$value[data_school_name]"]['CS'] += $value['num_of_student'];
+                } else {
+                    $college["$value[data_school_name]"]['DSI'] += $value['num_of_student'];
+                }
+                $college["$value[data_school_name]"]['SUM']  += $value['num_of_student'];
+            }
+        }
+
+        $data_college_student = [];
+        foreach ($college as  $item) {
+            array_push($data_college_student, $item);
+        }
+
+        //
+
         $data = array(
             "num_of_sit_student" => count($college_student_sit),
             "num_of_it_student" => count($college_student_it),
@@ -164,7 +205,8 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             "school_admission"  => $data_school_name,
             "school_activity"  => $data_school_activity,
             "school_admission_name"  => $data_school_admission_name,
-            "Header" => $temp_header //เรียกheader
+            "Header" => $temp_header, //เรียกheader
+            "college_student" => $data_college_student
         );
 
         return $data;

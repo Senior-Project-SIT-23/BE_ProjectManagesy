@@ -49,7 +49,7 @@ Route::group(['middleware' => ['checkauth']], function () {
     //analyze
     Route::get('/student', 'AnalyzeController@indexAllStudent'); //ดูข้อมูลนักเรียน
     Route::get('/analyze/{year}', 'AnalyzeController@indexAnalyzeByYear');
-    
+
     Route::get('/analyze/school/{year}', 'AnalyzeController@indexAnalyzeSchoolByYear');
 });
 
