@@ -59,8 +59,6 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->get();
 
 
-        // dd($temp_admission_name);
-
         //school admission
         $temp = [];
         foreach ($temp_admission as  $item) {
@@ -167,7 +165,6 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             "school_activity"  => $data_school_activity,
             "school_admission_name"  => $data_school_admission_name,
             "Header" => $temp_header //เรียกheader
-
         );
 
         return $data;
