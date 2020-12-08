@@ -9,7 +9,9 @@ use App\Model\CollegeStudent;
 use App\Model\CollegeStudentFile;
 use App\Model\DataAdmission;
 use App\Model\InformationStudent;
-use Illuminate\Notifications\Action;
+use App\Model\Entrance;
+use App\Model\RoundName;
+use App\Model\Program;
 
 class AdmissionRepository implements AdmissionRepositoryInterface
 {
@@ -150,71 +152,6 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 CollegeStudent::where('college_student_id', $value['college_student_id'])->delete();
             }
         }
-
-        // if ($data['admission_file']) {
-        //     Admission::where('admission_id', $data['admission_id'])
-        //         ->update([
-        //             'admission.admission_name' => $data['admission_name'],
-        //             'admission.round_name' => $data['round_name'],
-        //             'admission.admission_major' => $data['admission_major'],
-        //             'admission.admission_year' => $data['admission_year'],
-        //             'admission.admission_file_name' => $data['admission_file_name'],
-        //         ]);
-
-        //     //update ImformationStudent    
-        //     $check_student = AdmissionFile::where('admission_id', $data['admission_id'])->get();
-        //     foreach ($check_student as $value) {
-        //         $num_of_admission = InformationStudent::where('id', $value['data_id'])->first();
-        //         $new_num_of_admission = $num_of_admission->num_of_admission - 1;
-        //         InformationStudent::where('id', $value['data_id'])
-        //             ->update([
-        //                 'num_of_admission' => $new_num_of_admission,
-        //                 'data_email' => $value['data_email'],
-        //                 'data_school_name' => $value['data_school_name'],
-        //                 'data_tel' => $value['data_tel'],
-        //             ]);
-        //         $check = InformationStudent::where('id', $value['data_id'])->first();
-        //         $check_activity = $check->num_of_activity;
-        //         $check_admission  = $check->num_of_admission;
-        //         if ($check_activity == 0 && $check_admission == 0) {
-        //             InformationStudent::where('id', $value['data_id'])->delete();
-        //         }
-        //     }
-        //     AdmissionFile::where('admission_id', $data['admission_id'])->delete();
-        //     foreach ($data['admission_file'] as $value) {
-        //         $info_stu = new InformationStudent;
-        //         $info_stu->id = $value['data_id'];
-        //         $info_stu->data_first_name = $value['data_first_name'];
-        //         $info_stu->data_surname = $value['data_surname'];
-        //         $info_stu->data_degree = 'ม.6';
-        //         $info_stu->data_email = $value['data_email'];
-        //         $info_stu->data_school_name = $value['data_school_name'];
-        //         $info_stu->data_tel = $value['data_tel'];
-        //         $info_stu->num_of_activity = 0;
-        //         $info_stu->num_of_admission = 1;
-        //         $info_stu->save();
-
-        //         AdmissionFile::where('admission_id', $data['admission_id'])->delete();
-        //         $admission_file = new AdmissionFile();
-        //         $admission_file->data_id = $value['data_id'];
-        //         $admission_file->data_first_name = $value['data_first_name'];
-        //         $admission_file->data_surname = $value['data_surname'];
-        //         $admission_file->data_school_name = $value['data_school_name'];
-        //         $admission_file->data_programme = $value['data_programme'];
-        //         $admission_file->data_gpax = $value['data_gpax'];
-        //         $admission_file->data_email = $value['data_email'];
-        //         $admission_file->data_tel = $value['data_tel'];
-        //         $admission_file->admission_id = $data['admission_id'];
-        //         $admission_file->save();
-        //     }
-        // } else {
-        //     Admission::where('admission_id', $data['admission_id'])->update([
-        //         'admission.admission_name' => $data['admission_name'],
-        //         'admission.round_name' => $data['round_name'],
-        //         'admission.admission_major' => $data['admission_major'],
-        //         'admission.admission_year' => $data['admission_year']
-        //     ]);
-        // }
     }
 
     public function deleteAdmission($data)
@@ -285,6 +222,40 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 $info_stu->save();
             }
         }
+    }
+
+    public function create_entrance($data)
+    {
+        $entrance = new Entrance;
+        $entrance->entrance_name = $data['entrance_name'];
+        $entrance->save();
+        foreach ($data['round'] as $value) {
+            $round = new RoundName;
+            $round->round_name = $value['round_name'];
+            $round->entrance_id = $entrance->id;
+            $round->save();
+            foreach ($value['program'] as $values) {
+                $program = new Program;
+                $program->program_name = $values['program_name'];
+                $program->round_id = $round->id;
+                $program->save();
+            }
+        }
+    }
+
+    public function get_entrance()
+    {
+        $entrance = Entrance::get();
+        foreach ($entrance as $value) {
+            $round = RoundName::select('round_id', 'round_name')->where('entrance_id', $value['entrance_id'])->get();
+            $value['round'] = $round;
+            foreach ($round as $values) {
+                $program = Program::select('program_id', 'program_name')->where('round_id', $values['round_id'])->get();
+                $values['program'] = $program;
+            }
+        }
+
+        return $entrance;
     }
 
 

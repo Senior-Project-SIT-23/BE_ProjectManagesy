@@ -8,5 +8,4 @@ class DataStudentAdmission extends Model
 {
     protected $table= 'data_student_admission';
 
-    
 }

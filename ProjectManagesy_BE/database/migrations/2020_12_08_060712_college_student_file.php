@@ -19,7 +19,12 @@ class CollegeStudentFile extends Migration
             $table->string('data_entrance_year', 100);
             $table->string('data_first_name', 100);
             $table->string('data_surname', 100);
+            $table->string('data_gender', 100);
             $table->string('data_major', 100);
+            $table->string('data_tel', 100);
+            $table->string('data_email', 100);
+            $table->string('data_province', 100);
+            $table->string('data_education', 100);
             $table->string('data_school_name', 100);
             $table->string('data_admission', 100);
             $table->string('data_gpax', 100);

@@ -39,6 +39,11 @@ Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //�
 Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
 Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
 
+//Entrance
+Route::post('/entrance', 'AdmissionManagementController@storeEntrance'); //สร้าง Entrance
+
+Route::get('/entrance', 'AdmissionManagementController@indexEntrance'); //สร้าง Entrance
+
 //College Student
 Route::post('/college-student', 'CollegeStudentController@storeCollegeStudent'); //สร้าง college student
 Route::post('/college-student/edit', 'CollegeStudentController@editCollegeStudent'); //แก้ไข college student

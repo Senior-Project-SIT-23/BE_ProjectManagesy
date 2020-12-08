@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 interface AdmissionRepositoryInterface
 {
-    public function createAdmission($data);  
+    public function createAdmission($data);
     public function getAllAdmission();
     public function getAdmissionById($admission_id);
     public function editAdmission($data);
@@ -12,4 +12,6 @@ interface AdmissionRepositoryInterface
     public function getAllFileAdmission($admission_id);
     public function createInformationStudentAdmission($data);
 
+    public function create_entrance($data);
+    public function get_entrance();
 }

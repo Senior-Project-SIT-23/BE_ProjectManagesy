@@ -130,6 +130,57 @@ class AdmissionManagementController extends Controller
         return response()->json($admission, 200);
     }
 
+    //
+
+    public function storeEntrance(Request $request)
+    {
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+
+        //ตรวจสอบข้อมูล
+        $validator =  Validator::make($request->all(), [
+            'entrance_name' => 'required',
+            'round' => 'required',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
+        $data = $request->all();
+
+        foreach ($data['round'] as $value) {
+            $validator2 =  Validator::make($value, [
+                'round_name' => 'required',
+                'program' => 'required',
+            ], $messages);
+
+            if ($validator2->fails()) {
+                return response()->json($validator2->errors(), 500);
+            }
+
+            foreach ($value['program'] as $values) {
+                $validator3 =  Validator::make($values, [
+                    'program_name' => 'required',
+                ], $messages);
+
+                if ($validator3->fails()) {
+                    return response()->json($validator3->errors(), 500);
+                }
+            }
+        }
+
+        $this->admission->create_entrance($data);
+        return response()->json('สำเร็จ', 200);
+    }
+
+    public function indexEntrance()
+    {
+        $entrance = $this->admission->get_entrance();
+        return response()->json($entrance, 200);
+    }
+
     public function incrementalHash($len = 5)
     {
         $charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
