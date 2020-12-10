@@ -17,9 +17,9 @@ class AdmissionFile extends Migration
             $table->bigIncrements('admission_file_id')->unsigned();
             $table->string('admission_categories', 100);
             $table->string('admission_name', 100);
+            $table->integer('data_year');
             $table->string('admission_major', 100);
             $table->string('data_id', 100);
-            $table->string('passport', 100);
             $table->string('data_first_name', 100);
             $table->string('data_surname', 100);
             $table->string('data_gender', 100);
@@ -30,6 +30,7 @@ class AdmissionFile extends Migration
             $table->string('data_tel', 100);
             $table->string('data_email', 100);
             $table->string('data_gpax', 100);
+            $table->integer('status');
             $table->bigInteger('admission_id')->unsigned();
 
             $table->timestamps();

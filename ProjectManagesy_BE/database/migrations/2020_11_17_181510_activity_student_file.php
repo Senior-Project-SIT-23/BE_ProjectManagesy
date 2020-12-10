@@ -24,7 +24,7 @@ class ActivityStudentFile extends Migration
             $table->string('data_gpax', 100);
             $table->string('data_email', 100);
             $table->string('data_tel', 100);
-            $table->string('data_year',4);
+            $table->integer('data_year');
             $table->bigInteger('activity_student_id')->unsigned();
 
             $table->timestamps();

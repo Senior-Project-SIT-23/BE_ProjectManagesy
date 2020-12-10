@@ -16,6 +16,7 @@ class Entrance extends Migration
         Schema::create('entrance', function (Blueprint $table) {
             $table->bigIncrements('entrance_id')->unsigned();
             $table->string('entrance_name', 100); //ชื่อโครงการ
+            $table->integer('entrance_year');
 
             $table->timestamps();
         });

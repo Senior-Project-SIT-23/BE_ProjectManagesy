@@ -27,14 +27,13 @@ class AdmissionManagementController extends Controller
 
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
-            'admission_name' => 'required',
-            'round_name' => 'required',
+            'entrance_id' => 'required',
+            'round_id' => 'required',
+            'program_id' => 'required',
             'admission_major' => 'required',
             'admission_year' => 'required',
             'admission_file_name' => 'required',
-            'admission_file' => 'required',
         ], $messages);
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 500);
         }
@@ -43,14 +42,22 @@ class AdmissionManagementController extends Controller
 
         foreach ($data['admission_file'] as $value) {
             $validator2 =  Validator::make($value, [
+                'admission_categories' => 'required',
+                'admission_name' => 'required',
+                'data_year' => 'required',
+                'admission_major' => 'required',
                 'data_id' => 'required',
+                // 'passport_id' => 'required',
                 'data_first_name' => 'required',
                 'data_surname' => 'required',
+                'data_gender' => 'required',
                 'data_school_name' => 'required',
+                'data_province' => 'required',
+                'data_education' => 'required',
                 'data_programme' => 'required',
-                'data_gpax' => 'required',
+                'data_tel' => 'required',
                 'data_email' => 'required',
-                'data_tel' => 'required'
+                'data_gpax' => 'required'
             ], $messages);
             if ($validator2->fails()) {
                 return response()->json($validator2->errors(), 500);
@@ -84,10 +91,12 @@ class AdmissionManagementController extends Controller
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
             'admission_id' => 'required',
-            'admission_name' => 'required',
-            'round_name' => 'required',
+            'entrance_id' => 'required',
+            'round_id' => 'required',
+            'program_id' => 'required',
             'admission_major' => 'required',
             'admission_year' => 'required',
+            'admission_file_name' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -99,13 +108,22 @@ class AdmissionManagementController extends Controller
         if ($data['admission_file']) {
             foreach ($data['admission_file'] as $value) {
                 $validator2 =  Validator::make($value, [
+                    'admission_categories' => 'required',
+                    'admission_name' => 'required',
+                    'data_year' => 'required',
+                    'admission_major' => 'required',
+                    'data_id' => 'required',
+                    // 'passport_id' => 'required',
                     'data_first_name' => 'required',
                     'data_surname' => 'required',
+                    'data_gender' => 'required',
                     'data_school_name' => 'required',
+                    'data_province' => 'required',
+                    'data_education' => 'required',
                     'data_programme' => 'required',
-                    'data_gpax' => 'required',
+                    'data_tel' => 'required',
                     'data_email' => 'required',
-                    'data_tel' => 'required'
+                    'data_gpax' => 'required'
                 ], $messages);
                 if ($validator2->fails()) {
                     return response()->json($validator2->errors(), 500);
@@ -141,6 +159,7 @@ class AdmissionManagementController extends Controller
         //ตรวจสอบข้อมูล
         $validator =  Validator::make($request->all(), [
             'entrance_name' => 'required',
+            'entrance_year' => 'required',
             'round' => 'required',
         ], $messages);
 
@@ -179,6 +198,28 @@ class AdmissionManagementController extends Controller
     {
         $entrance = $this->admission->get_entrance();
         return response()->json($entrance, 200);
+    }
+
+    public function updateStatusAdmission(Request $request)
+    {
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+
+        //ตรวจสอบข้อมูล
+        $validator =  Validator::make($request->all(), [
+            'admission_id' => 'required',
+            'status' => 'required',
+            'data_id' => 'required'
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
+        $data = $request->all();
+        $this->admission->updateStatusAdmission($data);
+        return response()->json('สำเร็จ', 200);
     }
 
     public function incrementalHash($len = 5)

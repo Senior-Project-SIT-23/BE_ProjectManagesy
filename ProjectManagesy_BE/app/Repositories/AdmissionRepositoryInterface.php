@@ -11,6 +11,7 @@ interface AdmissionRepositoryInterface
     public function deleteAdmission($data);
     public function getAllFileAdmission($admission_id);
     public function createInformationStudentAdmission($data);
+    public function updateStatusAdmission($data);
 
     public function create_entrance($data);
     public function get_entrance();

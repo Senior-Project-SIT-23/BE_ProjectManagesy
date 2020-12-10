@@ -18,24 +18,33 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     public function createAdmission($data)
     {
         $admission = new Admission;
-        $admission->admission_name = $data['admission_name'];
-        $admission->round_name = $data['round_name'];
         $admission->admission_major = $data['admission_major'];
         $admission->admission_year = $data['admission_year'];
         $admission->admission_file_name = $data['admission_file_name'];
+        $admission->entrance_id = $data['entrance_id'];
+        $admission->round_id = $data['round_id'];
+        $admission->program_id = $data['program_id'];
         $admission->save();
 
         if ($data['admission_file']) {
             foreach ($data['admission_file'] as  $value) {
                 $admission_file = new AdmissionFile();
+                $admission_file->admission_categories = $value['admission_categories'];
+                $admission_file->admission_name = $value['admission_name'];
+                $admission_file->data_year = $value['data_year'];
+                $admission_file->admission_major = $value['admission_major'];
                 $admission_file->data_id = $value['data_id'];
                 $admission_file->data_first_name = $value['data_first_name'];
                 $admission_file->data_surname = $value['data_surname'];
+                $admission_file->data_gender = $value['data_gender'];
                 $admission_file->data_school_name = $value['data_school_name'];
+                $admission_file->data_province = $value['data_province'];
+                $admission_file->data_education = $value['data_education'];
                 $admission_file->data_programme = $value['data_programme'];
-                $admission_file->data_gpax = $value['data_gpax'];
-                $admission_file->data_email = $value['data_email'];
                 $admission_file->data_tel = $value['data_tel'];
+                $admission_file->data_email = $value['data_email'];
+                $admission_file->data_gpax = $value['data_gpax'];
+                $admission_file->status = 1;
                 $admission_file->admission_id = $admission->id;
                 $admission_file->save();
             }
@@ -70,10 +79,11 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         if ($data['admission_file']) {
             Admission::where('admission_id', $data['admission_id'])
                 ->update([
-                    'admission.admission_name' => $data['admission_name'],
-                    'admission.round_name' => $data['round_name'],
                     'admission.admission_major' => $data['admission_major'],
                     'admission.admission_year' => $data['admission_year'],
+                    'admission.entrance_id' => $data['entrance_id'],
+                    'admission.round_id' => $data['round_id'],
+                    'admission.program_id' => $data['program_id'],
                     'admission.admission_file_name' => $data['admission_file_name'],
                 ]);
             AdmissionFile::where('admission_id', $data['admission_id'])->delete();
@@ -87,14 +97,22 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                             'data_tel' => $value['data_tel']
                         ]);
                     $admission_file = new AdmissionFile();
+                    $admission_file->admission_categories = $value['admission_categories'];
+                    $admission_file->admission_name = $value['admission_name'];
+                    $admission_file->data_year = $value['data_year'];
+                    $admission_file->admission_major = $value['admission_major'];
                     $admission_file->data_id = $value['data_id'];
                     $admission_file->data_first_name = $value['data_first_name'];
                     $admission_file->data_surname = $value['data_surname'];
+                    $admission_file->data_gender = $value['data_gender'];
                     $admission_file->data_school_name = $value['data_school_name'];
+                    $admission_file->data_province = $value['data_province'];
+                    $admission_file->data_education = $value['data_education'];
                     $admission_file->data_programme = $value['data_programme'];
-                    $admission_file->data_gpax = $value['data_gpax'];
-                    $admission_file->data_email = $value['data_email'];
                     $admission_file->data_tel = $value['data_tel'];
+                    $admission_file->data_email = $value['data_email'];
+                    $admission_file->data_gpax = $value['data_gpax'];
+                    $admission_file->status = 1;
                     $admission_file->admission_id = $data['admission_id'];
                     $admission_file->save();
                 } else {
@@ -111,14 +129,22 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                     $info_stu->save();
 
                     $admission_file = new AdmissionFile();
+                    $admission_file->admission_categories = $value['admission_categories'];
+                    $admission_file->admission_name = $value['admission_name'];
+                    $admission_file->data_year = $value['data_year'];
+                    $admission_file->admission_major = $value['admission_major'];
                     $admission_file->data_id = $value['data_id'];
                     $admission_file->data_first_name = $value['data_first_name'];
                     $admission_file->data_surname = $value['data_surname'];
+                    $admission_file->data_gender = $value['data_gender'];
                     $admission_file->data_school_name = $value['data_school_name'];
+                    $admission_file->data_province = $value['data_province'];
+                    $admission_file->data_education = $value['data_education'];
                     $admission_file->data_programme = $value['data_programme'];
-                    $admission_file->data_gpax = $value['data_gpax'];
-                    $admission_file->data_email = $value['data_email'];
                     $admission_file->data_tel = $value['data_tel'];
+                    $admission_file->data_email = $value['data_email'];
+                    $admission_file->data_gpax = $value['data_gpax'];
+                    $admission_file->status = 1;
                     $admission_file->admission_id = $data['admission_id'];
                     $admission_file->save();
                 }
@@ -137,11 +163,13 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 }
             }
         } else {
+            //
             Admission::where('admission_id', $data['admission_id'])->update([
-                'admission.admission_name' => $data['admission_name'],
-                'admission.round_name' => $data['round_name'],
                 'admission.admission_major' => $data['admission_major'],
-                'admission.admission_year' => $data['admission_year']
+                'admission.admission_year' => $data['admission_year'],
+                'admission.entrance_id' => $data['entrance_id'],
+                'admission.round_id' => $data['round_id'],
+                'admission.program_id' => $data['program_id'],
             ]);
         }
 
@@ -228,6 +256,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
     {
         $entrance = new Entrance;
         $entrance->entrance_name = $data['entrance_name'];
+        $entrance->entrance_year = $data['entrance_year'];
         $entrance->save();
         foreach ($data['round'] as $value) {
             $round = new RoundName;
@@ -257,6 +286,22 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
         return $entrance;
     }
+
+    public function updateStatusAdmission($data)
+    {
+        //1 สมัครเข้าศึกษา
+        //2 มีสิทธิ์สอบสัมภาษณ์
+        //3 มีสิทธิ์เข้าศึกษา
+        //4 ยืนเข้าศึกษา
+        //5 ชำระเงิน
+        //6 เป็นนักศึกษา
+
+        foreach ($data['data_id'] as $value) {
+            AdmissionFile::where('admission_id', $data['admission_id'])->where('data_id', $value)
+                ->update(['status' => $data['status']]);
+        }
+    }
+
 
 
     public function incrementalHash($len = 5)

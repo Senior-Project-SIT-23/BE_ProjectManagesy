@@ -25,7 +25,12 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
                 $college_student_file->data_entrance_year = $value['data_entrance_year'];
                 $college_student_file->data_first_name = $value['data_first_name'];
                 $college_student_file->data_surname = $value['data_surname'];
+                $college_student_file->data_gender = $value['data_gender'];
                 $college_student_file->data_major = $value['data_major'];
+                $college_student_file->data_tel = $value['data_tel'];
+                $college_student_file->data_email = $value['data_email'];
+                $college_student_file->data_province = $value['data_province'];
+                $college_student_file->data_education = $value['data_education'];
                 $college_student_file->data_school_name = $value['data_school_name'];
                 $college_student_file->data_admission = $value['data_admission'];
                 $college_student_file->data_gpax = $value['data_gpax'];
@@ -59,7 +64,12 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
                 $college_student_file->data_entrance_year = $value['data_entrance_year'];
                 $college_student_file->data_first_name = $value['data_first_name'];
                 $college_student_file->data_surname = $value['data_surname'];
+                $college_student_file->data_gender = $value['data_gender'];
                 $college_student_file->data_major = $value['data_major'];
+                $college_student_file->data_tel = $value['data_tel'];
+                $college_student_file->data_email = $value['data_email'];
+                $college_student_file->data_province = $value['data_province'];
+                $college_student_file->data_education = $value['data_education'];
                 $college_student_file->data_school_name = $value['data_school_name'];
                 $college_student_file->data_admission = $value['data_admission'];
                 $college_student_file->data_gpax = $value['data_gpax'];
