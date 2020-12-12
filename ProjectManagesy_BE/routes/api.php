@@ -39,7 +39,7 @@ Route::put('/status', 'AdmissionManagementController@updateStatusAdmission');
 
 Route::get('/admission', 'AdmissionManagementController@indexAllAdmission'); //ดู Admission
 Route::get('/admission/{admission_id}', 'AdmissionManagementController@indexAdmission'); //ดู Admisssion_id
-Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
+Route::get('/admission/readfilename/{admission_id}', 'AdmissionManagementController@readFileAdmission'); //ดู Admisssion_id
 
 //Entrance
 Route::post('/entrance', 'AdmissionManagementController@storeEntrance'); //สร้าง Entrance

@@ -57,17 +57,18 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
         foreach ($admission as $value) {
             $temp_admission = Admission::where('admission_id', $value['admission_id'])->first();
-            $entrance_id = $temp_admission->entrance_id;
-            $round_id = $temp_admission->round_id;
             $program_id = $temp_admission->program_id;
 
-            $entrance = Entrance::select('entrance.entrance_id', 'entrance.entrance_name', 'round_name.round_id', 'round_name.round_name', 'program.program_id', 'program.program_name')
-                ->where('entrance.entrance_id', $entrance_id)
-                ->join('round_name', 'round_name.entrance_id', '=', 'entrance.entrance_id')->where('round_name.round_id', $round_id)
-                ->join('program', 'program.round_id', '=', 'program_id')->where('program.program_id', $program_id)->get();
+            $entrance = Program::select('admission.admission_id', 'entrance.entrance_id', 'entrance.entrance_name', 'round_name.round_id', 'round_name.round_name', 'program.program_id', 'program.program_name')
+                ->where('program.program_id', $program_id)
+                ->join('round_name', 'round_name.round_id', '=', 'program.round_id')
+                ->join('entrance', 'entrance.entrance_id', '=', 'round_name.entrance_id')
+                ->join('admission', 'admission.entrance_id', '=', 'entrance.entrance_id')
+                ->get();
+
             $value['entrance'] = $entrance;
-            $admissionS_file = AdmissionFile::where('admission_id', $value['admission_id'])->get();
-            $value['admission_file'] = $admissionS_file;
+            $admission_file = AdmissionFile::where('admission_id', $value['admission_id'])->get();
+            $value['admission_file'] = $admission_file;
         }
 
         return $admission;
@@ -237,7 +238,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
     public function getAllFileAdmission($admission_id)
     {
-        $admission = DataAdmission::where('admission_id', $admission_id)->get();
+        $admission = AdmissionFile::where('admission_id', $admission_id)->get();
         return $admission;
     }
 
