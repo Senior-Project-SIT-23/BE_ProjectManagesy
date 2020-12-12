@@ -15,7 +15,7 @@ class Program extends Migration
     {
         Schema::create('program', function (Blueprint $table) {
             $table->bigIncrements('program_id')->unsigned();
-            $table->string('program_name', 100);
+            $table->string('program_name', 500);
             $table->bigInteger('round_id')->unsigned();
 
             $table->timestamps();

@@ -27,6 +27,111 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->where('data_major', 'DSI')->get();
         $admission = Admission::where('admission_year', $year)
             ->join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->get();
+
+        $gender_it_male = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'IT')->where('data_gender', 'ชาย')->get());
+        $gender_it_female = count(CollegeStudentFile::where('data_entrance_year', $year)->where('data_gender', 'หญิง')
+            ->where('data_major', 'IT')->get());
+        $total_gender_it = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'IT')->get());
+        $gender_cs_male = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'CS')->where('data_gender', 'ชาย')->get());
+        $gender_cs_female = count(CollegeStudentFile::where('data_entrance_year', $year)->where('data_gender', 'หญิง')
+            ->where('data_major', 'CS')->get());
+        $total_gender_cs = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'CS')->get());
+        $gender_dsi_male = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'DSI')->where('data_gender', 'ชาย')->get());
+        $gender_dsi_female = count(CollegeStudentFile::where('data_entrance_year', $year)->where('data_gender', 'หญิง')
+            ->where('data_major', 'DSI')->get());
+        $total_gender_dsi = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_major', 'DSI')->get());
+        $all_gender_male = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_gender', 'ชาย')->get());
+        $all_gender_female = count(CollegeStudentFile::where('data_entrance_year', $year)
+            ->where('data_gender', 'หญิง')->get());
+        $all_gender = count(CollegeStudentFile::where('data_entrance_year', $year)->get());
+
+        $gender = (array)array(
+            [
+                'Major' => 'IT',
+                'Male' => "$gender_it_male",
+                'Female' => "$gender_it_female",
+                'Total' => "$total_gender_it"
+            ],
+            [
+                'Major' => 'CS',
+                'Male' => "$gender_cs_male",
+                'Female' => "$gender_cs_female",
+                'Total' => "$total_gender_cs"
+            ],
+            [
+                'Major' => 'DSI',
+                'Male' => "$gender_dsi_male",
+                'Female' => "$gender_dsi_female",
+                'Total' => "$total_gender_dsi"
+            ],
+            [
+                'Major' => 'All',
+                'Male' => "$all_gender_male",
+                'Female' => "$all_gender_female",
+                'Total' => "$all_gender"
+            ],
+        );
+
+        //most provice
+        $college_province = CollegeStudentFile::selectRaw('data_province, count(data_province) as num_of_province')
+            ->where('data_entrance_year', $year)
+            ->groupBy('data_province')->get();
+        // foreach ($college_province as $value) {
+
+        // }
+
+
+        //compare_activity
+        $student = CollegeStudentFile::where('data_entrance_year', $year)->get();
+        $used_to_activity = 0;
+        $non_activity = 0;
+        foreach ($student as $value) {
+            $activity_student = ActivityStudentFile::where('data_id', $value['data_id'])->first();
+            if ($activity_student) {
+                $used_to_activity++;
+            } else {
+                $non_activity++;
+            }
+        }
+        $activity = (array)array(
+            [
+                'activity' => "$used_to_activity",
+                'non_activity' => "$non_activity"
+            ]
+        );
+
+        //5 sequence most activity
+        $keep_activity = [];
+        foreach ($student as $value) {
+            $activity_student_file = ActivityStudentFile::where('data_id', $value['data_id'])->first();
+            if ($activity_student_file) {
+                $activity_student = ActivityStudent::where('activity_student_id', $activity_student_file->activity_student_id)->first();
+                $activity_student_name = $activity_student->activity_student_name;
+
+                if (Arr::has($keep_activity, $activity_student_name)) {
+                    $keep_activity["activity"]['num_of_activity'] += 1;
+                } else {
+                    $keep_activity["activity"] = array();
+                    $keep_activity["activity"]['activty_name'] = $activity_student_name;
+                    $keep_activity["activity"]['num_of_activity'] = 1;
+                    // dd($keep_activity);
+                }
+            }
+        }
+
+        $data_most_activity = [];
+        foreach ($keep_activity as  $item) {
+            array_push($data_most_activity, $item);
+        }
+
+
         $activity_file = ActivityStudentFile::where('data_year', $year)->select('data_id')->distinct()->get();
 
         $temp_admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
@@ -43,6 +148,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->groupBY('activity_student_name')
             ->get();
 
+        //ไม่ทำโว้ยยยยยยยยยยยยยยยย
         $temp_admission_name = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
             ->selectRaw('admission.admission_name, admission.admission_major, COUNT(admission.admission_major) as num_of_student')
             ->where("admission_year", $year)
@@ -65,7 +171,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->groupBy('data_major')
             ->get();
 
-        //school admission
+        // //school admission
         $temp = [];
         foreach ($temp_admission as  $item) {
             if (Arr::has($temp, "$item[data_school_name]")) {
@@ -101,7 +207,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         }
         //
 
-        //SELECT activity_student_name FROM `activity_student` WHERE activity_student_year = 2563 คือ header เพื่อดูว่าในปีนี้มี activity อะไรบ้าง แล้วส่ง header นี้กลับไปด้วย
+        // //SELECT activity_student_name FROM `activity_student` WHERE activity_student_year = 2563 คือ header เพื่อดูว่าในปีนี้มี activity อะไรบ้าง แล้วส่ง header นี้กลับไปด้วย
         $school = [];
         foreach ($temp_activity as $value) {
             if (Arr::has($school, "$value[data_school_name]")) {
@@ -201,7 +307,11 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             "num_of_cs_student" => count($college_student_cs),
             "num_of_dsi_student" => count($college_student_dsi),
             "num_of_admission_student" => count($admission),
-            "num_of_activity_student" => count($activity_file),
+            "gender" => $gender,
+            "most_of_province" => $college_province,
+            "compare_activity" => $activity,
+            // "most_of_activity" => $data_most_activity, no success
+            // "num_of_activity_student" => count($activity_file), dont know
             "school_admission"  => $data_school_name,
             "school_activity"  => $data_school_activity,
             "school_admission_name"  => $data_school_admission_name,

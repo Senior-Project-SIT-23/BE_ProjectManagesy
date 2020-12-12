@@ -53,9 +53,19 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
     public function getAllAdmission()
     {
-        $admission = Admission::all();
+        $admission = Admission::select('admission_id', 'admission_major', 'admission_year', 'admission_file_name')->get();
 
         foreach ($admission as $value) {
+            $temp_admission = Admission::where('admission_id', $value['admission_id'])->first();
+            $entrance_id = $temp_admission->entrance_id;
+            $round_id = $temp_admission->round_id;
+            $program_id = $temp_admission->program_id;
+
+            $entrance = Entrance::select('entrance.entrance_id', 'entrance.entrance_name', 'round_name.round_id', 'round_name.round_name', 'program.program_id', 'program.program_name')
+                ->where('entrance.entrance_id', $entrance_id)
+                ->join('round_name', 'round_name.entrance_id', '=', 'entrance.entrance_id')->where('round_name.round_id', $round_id)
+                ->join('program', 'program.round_id', '=', 'program_id')->where('program.program_id', $program_id)->get();
+            $value['entrance'] = $entrance;
             $admissionS_file = AdmissionFile::where('admission_id', $value['admission_id'])->get();
             $value['admission_file'] = $admissionS_file;
         }
@@ -65,11 +75,24 @@ class AdmissionRepository implements AdmissionRepositoryInterface
 
     public function getAdmissionById($admission_id)
     {
-        $admission = Admission::where('admission_id', $admission_id)->first();
+        $temp_admission = Admission::where('admission_id', $admission_id)->first();
+        $entrance_id = $temp_admission->entrance_id;
+        $round_id = $temp_admission->round_id;
+        $program_id = $temp_admission->program_id;
+
+        $entrance = Entrance::select('entrance.entrance_id', 'entrance.entrance_name', 'round_name.round_id', 'round_name.round_name', 'program.program_id', 'program.program_name')
+            ->where('entrance.entrance_id', $entrance_id)
+            ->join('round_name', 'round_name.entrance_id', '=', 'entrance.entrance_id')->where('round_name.round_id', $round_id)
+            ->join('program', 'program.round_id', '=', 'program_id')->where('program.program_id', $program_id)->get();
+
+        $admission = Admission::select('admission_id', 'admission_major', 'admission_year', 'admission_file_name')
+            ->where('admission_id', $admission_id)->first();
 
         $attachment = AdmissionFile::where('admission_id', $admission_id)->get();
 
+        $admission->entrance = $entrance;
         $admission->attachment = $attachment;
+
 
         return $admission;
     }
@@ -272,9 +295,9 @@ class AdmissionRepository implements AdmissionRepositoryInterface
         }
     }
 
-    public function get_entrance()
+    public function get_entrance($entrance_year)
     {
-        $entrance = Entrance::get();
+        $entrance = Entrance::where('entrance_year', $entrance_year)->get();
         foreach ($entrance as $value) {
             $round = RoundName::select('round_id', 'round_name')->where('entrance_id', $value['entrance_id'])->get();
             $value['round'] = $round;
@@ -283,7 +306,6 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 $values['program'] = $program;
             }
         }
-
         return $entrance;
     }
 

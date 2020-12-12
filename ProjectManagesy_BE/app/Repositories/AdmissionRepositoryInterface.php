@@ -14,5 +14,5 @@ interface AdmissionRepositoryInterface
     public function updateStatusAdmission($data);
 
     public function create_entrance($data);
-    public function get_entrance();
+    public function get_entrance($entrance_year);
 }

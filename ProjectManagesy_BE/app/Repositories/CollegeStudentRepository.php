@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Model\AdmissionFile;
 use App\Model\ActivityStudentFile;
 use App\Model\CollegeStudent;
 use App\Model\CollegeStudentFile;
 use Throwable;
+use Illuminate\Support\Str;
 
 class CollegeStudentRepository implements CollegeStudentRepositoryInterface
 {
@@ -108,9 +110,26 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
                 $values['activity'] = $activity;
             }
         }
-
-
-
         return $college_student;
+    }
+
+    public function chcekStatus($data)
+    {
+        // Str::lower($test);
+        foreach ($data['college_student_file'] as $value) {
+            $admission = AdmissionFile::where('data_id', $value['data_id'])->where('admission_name', $value['data_admission'])->first();
+            if ($admission->status != 5) {
+                $status = 'false';
+                return $status;
+            }
+        }
+    }
+
+    public function updateStatus($data)
+    {
+        foreach ($data['college_student_file'] as $value) {
+            $admission = AdmissionFile::where('data_id', $value['data_id'])->where('admission_name', $value['data_admission'])
+                ->update(['status' => 6]);
+        }
     }
 }

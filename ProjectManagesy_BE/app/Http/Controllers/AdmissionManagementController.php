@@ -194,9 +194,9 @@ class AdmissionManagementController extends Controller
         return response()->json('สำเร็จ', 200);
     }
 
-    public function indexEntrance()
+    public function indexEntrance($entrance_year)
     {
-        $entrance = $this->admission->get_entrance();
+        $entrance = $this->admission->get_entrance($entrance_year);
         return response()->json($entrance, 200);
     }
 

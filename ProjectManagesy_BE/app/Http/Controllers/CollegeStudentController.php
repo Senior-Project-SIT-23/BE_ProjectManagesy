@@ -36,7 +36,6 @@ class CollegeStudentController extends Controller
         }
 
         $data = $request->all();
-
         foreach ($data['college_student_file'] as $value) {
             $validator2 =  Validator::make($value, [
                 'data_student_id' => 'required',
@@ -59,12 +58,18 @@ class CollegeStudentController extends Controller
             }
         }
 
-        $college = $this->colleage_student->createCollegeStudent($data);
+        $status = $this->colleage_student->chcekStatus($data);
 
-        if ($college == 'Fail') {
-            return response()->json('Not Success, college student duplicate on file or do not have in admission', 500);
+        if ($status == 'false') {
+            return response()->json('Not Success, status error', 500);
         } else {
-            return response()->json('สำเร็จ', 200);
+            $college = $this->colleage_student->createCollegeStudent($data);
+            if ($college == 'Fail') {
+                return response()->json('Not Success, college student duplicate on file or do not have in admission', 500);
+            } else {
+                $this->colleage_student->updateStatus($data);
+                return response()->json('สำเร็จ', 200);
+            }
         }
     }
 

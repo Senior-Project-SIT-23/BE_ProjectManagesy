@@ -44,7 +44,7 @@ Route::get('/admission/readfilename/{activity_id}', 'AdmissionManagementControll
 //Entrance
 Route::post('/entrance', 'AdmissionManagementController@storeEntrance'); //สร้าง Entrance
 
-Route::get('/entrance', 'AdmissionManagementController@indexEntrance'); //สร้าง Entrance
+Route::get('/entrance/{entrance_year}', 'AdmissionManagementController@indexEntrance'); //สร้าง Entrance
 
 //College Student
 Route::post('/college-student', 'CollegeStudentController@storeCollegeStudent'); //สร้าง college student

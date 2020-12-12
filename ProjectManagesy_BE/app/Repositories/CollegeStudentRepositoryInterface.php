@@ -8,4 +8,6 @@ interface CollegeStudentRepositoryInterface
     public function editCollegeStudent($data);
     public function deleteCollegeStudent($data);
     public function getAllCollegeStudent();
+    public function chcekStatus($data);
+    public function updateStatus($data);
 }
