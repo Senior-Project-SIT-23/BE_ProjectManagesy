@@ -9,9 +9,10 @@ use App\Model\AdmissionFile;
 use App\Model\CollegeStudent;
 use App\Model\InformationStudent;
 use App\Model\CollegeStudentFile;
+use App\Model\Entrance;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use stdClass;
+use App\Model\Program;
 
 class AnalyzeRepository implements AnalyzeRepositoryInterface
 {
@@ -148,13 +149,12 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ->groupBY('activity_student_name')
             ->get();
 
-        //ไม่ทำโว้ยยยยยยยยยยยยยยยย
-        $temp_admission_name = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
-            ->selectRaw('admission.admission_name, admission.admission_major, COUNT(admission.admission_major) as num_of_student')
-            ->where("admission_year", $year)
-            ->groupBy('admission_name')
-            ->groupBy('admission_major')
-            ->get();
+        // $temp_admission_name = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
+        //     ->selectRaw('admission.admission_name, admission.admission_major, COUNT(admission.admission_major) as num_of_student')
+        //     ->where("admission_year", $year)
+        //     ->groupBy('admission_name')
+        //     ->groupBy('admission_major')
+        //     ->get();
 
 
         //เพิ่ม เรียกheader
@@ -227,41 +227,40 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         }
 
         //
-
         //school_admission_name
-        $admission_name = [];
-        foreach ($temp_admission_name as $value) {
-            if (Arr::has($admission_name, "$value[admission_name]")) {
-                if ($value["admission_major"] == 'IT') {
-                    $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
-                } else if ($value["admission_major"] == 'CS') {
-                    $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
-                } else {
-                    $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
-                }
-                $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
-            } else {
-                $admission_name["$value[admission_name]"] = array();
-                $admission_name["$value[admission_name]"]['IT'] = 0;
-                $admission_name["$value[admission_name]"]['CS'] = 0;
-                $admission_name["$value[admission_name]"]['DSI'] = 0;
-                $admission_name["$value[admission_name]"]['SUM'] = 0;
-                $admission_name["$value[admission_name]"]['admission_name'] = $value["admission_name"];
-                if ($value["admission_major"] == 'IT') {
-                    $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
-                } else if ($value["admission_major"] == 'CS') {
-                    $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
-                } else {
-                    $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
-                }
-                $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
-            }
-        }
+        // $admission_name = [];
+        // foreach ($temp_admission_name as $value) {
+        //     if (Arr::has($admission_name, "$value[admission_name]")) {
+        //         if ($value["admission_major"] == 'IT') {
+        //             $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
+        //         } else if ($value["admission_major"] == 'CS') {
+        //             $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
+        //         } else {
+        //             $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
+        //         }
+        //         $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
+        //     } else {
+        //         $admission_name["$value[admission_name]"] = array();
+        //         $admission_name["$value[admission_name]"]['IT'] = 0;
+        //         $admission_name["$value[admission_name]"]['CS'] = 0;
+        //         $admission_name["$value[admission_name]"]['DSI'] = 0;
+        //         $admission_name["$value[admission_name]"]['SUM'] = 0;
+        //         $admission_name["$value[admission_name]"]['admission_name'] = $value["admission_name"];
+        //         if ($value["admission_major"] == 'IT') {
+        //             $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
+        //         } else if ($value["admission_major"] == 'CS') {
+        //             $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
+        //         } else {
+        //             $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
+        //         }
+        //         $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
+        //     }
+        // }
 
-        $data_school_admission_name = [];
-        foreach ($admission_name as  $item) {
-            array_push($data_school_admission_name, $item);
-        }
+        // $data_school_admission_name = [];
+        // foreach ($admission_name as  $item) {
+        //     array_push($data_school_admission_name, $item);
+        // }
         //
 
         //college student
@@ -314,7 +313,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             // "num_of_activity_student" => count($activity_file), dont know
             "school_admission"  => $data_school_name,
             "school_activity"  => $data_school_activity,
-            "school_admission_name"  => $data_school_admission_name,
+            // "school_admission_name"  => $data_school_admission_name,
             "Header" => $temp_header, //เรียกheader
             "college_student" => $data_college_student
         );
