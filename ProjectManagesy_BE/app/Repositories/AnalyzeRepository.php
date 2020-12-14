@@ -126,17 +126,13 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             array_push($data_most_activity, $item);
         }
 
-        // $temp_admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
-        //     ->selectRaw('count(admission.admission_major) as num_of_student, admission_file.data_school_name, admission.admission_major')
-        //     ->where("admission_year", $year)
-        //     ->groupBy('admission_file.data_school_name')
-        //     ->groupBy('admission_major')
-        //     ->get();
-        $temp_admission = CollegeStudentFile::where('data_entrance_year', $year)
-            ->selectRaw('data_school_name, data_major, COUNT(data_school_name) as num_of_school_name')
-            ->groupBy('data_school_name')
-            ->groupBy('data_major')
+        $temp_admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
+            ->selectRaw('count(admission.admission_major) as num_of_student, admission_file.data_school_name, admission.admission_major')
+            ->where("admission_year", $year)
+            ->groupBy('admission_file.data_school_name')
+            ->groupBy('admission_major')
             ->get();
+
 
         $temp_activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
             ->selectRaw('activity_student_file.data_school_name, COUNT(*) as num_of_student, activity_student.activity_student_name')
@@ -166,14 +162,14 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         $temp = [];
         foreach ($temp_admission as  $item) {
             if (Arr::has($temp, "$item[data_school_name]")) {
-                if ($item["data_major"] == 'IT') {
-                    $temp["$item[data_school_name]"]['IT'] += $item['num_of_school_name'];
-                } else if ($item["data_major"] == 'CS') {
-                    $temp["$item[data_school_name]"]['CS'] += $item['num_of_school_name'];
+                if ($item["admission_major"] == 'IT') {
+                    $temp["$item[data_school_name]"]['IT'] += $item['num_of_student'];
+                } else if ($item["admission_major"] == 'CS') {
+                    $temp["$item[data_school_name]"]['CS'] += $item['num_of_student'];
                 } else {
-                    $temp["$item[data_school_name]"]['DSI'] += $item['num_of_school_name'];
+                    $temp["$item[data_school_name]"]['DSI'] += $item['num_of_student'];
                 }
-                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_school_name'];
+                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_student'];
             } else {
                 $temp["$item[data_school_name]"] = array();
                 $temp["$item[data_school_name]"]['IT'] = 0;
@@ -181,14 +177,14 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
                 $temp["$item[data_school_name]"]['DSI'] = 0;
                 $temp["$item[data_school_name]"]['SUM'] = 0;
                 $temp["$item[data_school_name]"]['data_school_name'] = $item["data_school_name"];
-                if ($item["data_major"] == 'IT') {
-                    $temp["$item[data_school_name]"]['IT'] += $item['num_of_school_name'];
-                } else if ($item["data_major"] == 'CS') {
-                    $temp["$item[data_school_name]"]['CS'] += $item['num_of_school_name'];
+                if ($item["admission_major"] == 'IT') {
+                    $temp["$item[data_school_name]"]['IT'] += $item['num_of_student'];
+                } else if ($item["admission_major"] == 'CS') {
+                    $temp["$item[data_school_name]"]['CS'] += $item['num_of_student'];
                 } else {
-                    $temp["$item[data_school_name]"]['DSI'] += $item['num_of_school_name'];
+                    $temp["$item[data_school_name]"]['DSI'] += $item['num_of_student'];
                 }
-                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_school_name'];
+                $temp["$item[data_school_name]"]['SUM']  += $item['num_of_student'];
             }
         }
 
