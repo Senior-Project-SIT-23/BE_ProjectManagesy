@@ -241,7 +241,7 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
                 $admission_name["$value[data_admission]"]['admission_name'] = $value["data_admission"];
                 if ($value["data_major"] == 'IT') {
                     $admission_name["$value[data_admission]"]['IT'] += $value['num_of_admission_name'];
-                } else if ($value["admission_major"] == 'CS') {
+                } else if ($value["data_major"] == 'CS') {
                     $admission_name["$value[data_admission]"]['CS'] += $value['num_of_admission_name'];
                 } else {
                     $admission_name["$value[data_admission]"]['DSI'] += $value['num_of_admission_name'];
