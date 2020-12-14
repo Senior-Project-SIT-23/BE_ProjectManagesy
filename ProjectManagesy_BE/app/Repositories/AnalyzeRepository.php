@@ -29,6 +29,8 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         $admission = Admission::where('admission_year', $year)
             ->join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')->get();
 
+        $activity_file = ActivityStudentFile::select('data_id')->distinct()->get();
+
         $gender_it_male = count(CollegeStudentFile::where('data_entrance_year', $year)
             ->where('data_major', 'IT')->where('data_gender', 'ชาย')->get());
         $gender_it_female = count(CollegeStudentFile::where('data_entrance_year', $year)->where('data_gender', 'หญิง')
@@ -80,14 +82,10 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             ],
         );
 
-        //most provice
+        //Most Province
         $college_province = CollegeStudentFile::selectRaw('data_province, count(data_province) as num_of_province')
             ->where('data_entrance_year', $year)
             ->groupBy('data_province')->get();
-        // foreach ($college_province as $value) {
-
-        // }
-
 
         //compare_activity
         $student = CollegeStudentFile::where('data_entrance_year', $year)->get();
@@ -115,25 +113,18 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             if ($activity_student_file) {
                 $activity_student = ActivityStudent::where('activity_student_id', $activity_student_file->activity_student_id)->first();
                 $activity_student_name = $activity_student->activity_student_name;
-
                 if (Arr::has($keep_activity, $activity_student_name)) {
-                    $keep_activity["activity"]['num_of_activity'] += 1;
+                    $keep_activity["$activity_student_name"]['Total']++;
                 } else {
-                    $keep_activity["activity"] = array();
-                    $keep_activity["activity"]['activty_name'] = $activity_student_name;
-                    $keep_activity["activity"]['num_of_activity'] = 1;
-                    // dd($keep_activity);
+                    $keep_activity["$activity_student_name"]['activity_name'] = $activity_student_name;
+                    $keep_activity["$activity_student_name"]['Total'] = 1;
                 }
             }
         }
-
         $data_most_activity = [];
         foreach ($keep_activity as  $item) {
             array_push($data_most_activity, $item);
         }
-
-
-        $activity_file = ActivityStudentFile::where('data_year', $year)->select('data_id')->distinct()->get();
 
         $temp_admission = Admission::join('admission_file', 'admission_file.admission_id', '=', 'admission.admission_id')
             ->selectRaw('count(admission.admission_major) as num_of_student, admission_file.data_school_name, admission.admission_major')
@@ -144,7 +135,6 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
 
         $temp_activity = ActivityStudent::join('activity_student_file', 'activity_student_file.activity_student_id', '=', 'activity_student.activity_student_id')
             ->selectRaw('activity_student_file.data_school_name, COUNT(*) as num_of_student, activity_student.activity_student_name')
-            ->where('activity_student.activity_student_year', $year)
             ->groupBy('activity_student_file.data_school_name')
             ->groupBY('activity_student_name')
             ->get();
@@ -156,11 +146,14 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
         //     ->groupBy('admission_major')
         //     ->get();
 
+        $temp_admission_name = CollegeStudentFile::where('data_entrance_year', $year)
+            ->selectRaw('data_admission, data_major, COUNT(data_admission) as num_of_admission_name')
+            ->groupBy('data_admission')
+            ->groupBy('data_major')
+            ->get();
 
         //เพิ่ม เรียกheader
-        $temp_header = ActivityStudent::where('activity_student_year', $year)
-            ->selectRaw('activity_student.activity_student_name')
-            ->where("activity_student_year", $year)
+        $temp_header = ActivityStudent::selectRaw('activity_student.activity_student_name')
             ->groupBy('activity_student_name')
             ->groupBy('activity_student_major')
             ->get();
@@ -226,41 +219,41 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             array_push($data_school_activity, $value);
         }
 
-        //
-        //school_admission_name
-        // $admission_name = [];
-        // foreach ($temp_admission_name as $value) {
-        //     if (Arr::has($admission_name, "$value[admission_name]")) {
-        //         if ($value["admission_major"] == 'IT') {
-        //             $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
-        //         } else if ($value["admission_major"] == 'CS') {
-        //             $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
-        //         } else {
-        //             $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
-        //         }
-        //         $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
-        //     } else {
-        //         $admission_name["$value[admission_name]"] = array();
-        //         $admission_name["$value[admission_name]"]['IT'] = 0;
-        //         $admission_name["$value[admission_name]"]['CS'] = 0;
-        //         $admission_name["$value[admission_name]"]['DSI'] = 0;
-        //         $admission_name["$value[admission_name]"]['SUM'] = 0;
-        //         $admission_name["$value[admission_name]"]['admission_name'] = $value["admission_name"];
-        //         if ($value["admission_major"] == 'IT') {
-        //             $admission_name["$value[admission_name]"]['IT'] += $value['num_of_student'];
-        //         } else if ($value["admission_major"] == 'CS') {
-        //             $admission_name["$value[admission_name]"]['CS'] += $value['num_of_student'];
-        //         } else {
-        //             $admission_name["$value[admission_name]"]['DSI'] += $value['num_of_student'];
-        //         }
-        //         $admission_name["$value[admission_name]"]['SUM']  += $value['num_of_student'];
-        //     }
-        // }
 
-        // $data_school_admission_name = [];
-        // foreach ($admission_name as  $item) {
-        //     array_push($data_school_admission_name, $item);
-        // }
+        // school_admission_name
+        $admission_name = [];
+        foreach ($temp_admission_name as $value) {
+            if (Arr::has($admission_name, "$value[data_admission]")) {
+                if ($value["data_major"] == 'IT') {
+                    $admission_name["$value[data_admission]"]['IT'] += $value['num_of_admission_name'];
+                } else if ($value["data_major"] == 'CS') {
+                    $admission_name["$value[data_admission]"]['CS'] += $value['num_of_admission_name'];
+                } else {
+                    $admission_name["$value[data_admission]"]['DSI'] += $value['num_of_admission_name'];
+                }
+                $admission_name["$value[data_admission]"]['SUM']  += $value['num_of_admission_name'];
+            } else {
+                $admission_name["$value[data_admission]"] = array();
+                $admission_name["$value[data_admission]"]['IT'] = 0;
+                $admission_name["$value[data_admission]"]['CS'] = 0;
+                $admission_name["$value[data_admission]"]['DSI'] = 0;
+                $admission_name["$value[data_admission]"]['SUM'] = 0;
+                $admission_name["$value[data_admission]"]['admission_name'] = $value["data_admission"];
+                if ($value["data_major"] == 'IT') {
+                    $admission_name["$value[data_admission]"]['IT'] += $value['num_of_admission_name'];
+                } else if ($value["admission_major"] == 'CS') {
+                    $admission_name["$value[data_admission]"]['CS'] += $value['num_of_admission_name'];
+                } else {
+                    $admission_name["$value[data_admission]"]['DSI'] += $value['num_of_admission_name'];
+                }
+                $admission_name["$value[data_admission]"]['SUM']  += $value['num_of_admission_name'];
+            }
+        }
+
+        $data_school_admission_name = [];
+        foreach ($admission_name as  $item) {
+            array_push($data_school_admission_name, $item);
+        }
         //
 
         //college student
@@ -306,14 +299,14 @@ class AnalyzeRepository implements AnalyzeRepositoryInterface
             "num_of_cs_student" => count($college_student_cs),
             "num_of_dsi_student" => count($college_student_dsi),
             "num_of_admission_student" => count($admission),
+            "num_of_activity_student" => count($activity_file),
             "gender" => $gender,
             "most_of_province" => $college_province,
             "compare_activity" => $activity,
-            // "most_of_activity" => $data_most_activity, no success
-            // "num_of_activity_student" => count($activity_file), dont know
+            "most_of_activity" => $data_most_activity,
             "school_admission"  => $data_school_name,
             "school_activity"  => $data_school_activity,
-            // "school_admission_name"  => $data_school_admission_name,
+            "school_admission_name"  => $data_school_admission_name,
             "Header" => $temp_header, //เรียกheader
             "college_student" => $data_college_student
         );
