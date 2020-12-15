@@ -64,6 +64,7 @@ class AdmissionRepository implements AdmissionRepositoryInterface
                 ->join('round_name', 'round_name.round_id', '=', 'program.round_id')
                 ->join('entrance', 'entrance.entrance_id', '=', 'round_name.entrance_id')
                 ->join('admission', 'admission.entrance_id', '=', 'entrance.entrance_id')
+                ->where('admission.admission_id', $value['admission_id'])
                 ->get();
 
             $value['entrance'] = $entrance;
