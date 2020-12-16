@@ -60,9 +60,11 @@ class CollegeStudentController extends Controller
 
         $status = $this->colleage_student->chcekStatus($data);
 
-        if ($status == 'false') {
+        if ($status == 'false_status') {
             return response()->json('Not Success, status error', 500);
-        } else {
+        } else if ($status == 'false_admission_name') {
+            return response()->json('Not Success, not match admission_name', 500);
+        } else if ($status == 'true') {
             $college = $this->colleage_student->createCollegeStudent($data);
             if ($college == 'Fail') {
                 return response()->json('Not Success, college student duplicate on file or do not have in admission', 500);
@@ -91,6 +93,7 @@ class CollegeStudentController extends Controller
 
         $data = $request->all();
 
+
         if ($data['college_student_file']) {
             foreach ($data['college_student_file'] as $value) {
                 $validator2 =  Validator::make($value, [
@@ -113,7 +116,24 @@ class CollegeStudentController extends Controller
                     return response()->json($validator2->errors(), 500);
                 }
             }
+            $status = $this->colleage_student->chcekStatus($data);
+
+            if ($status == 'false_status') {
+                return response()->json('Not Success, status error', 500);
+            } else if ($status == 'false_admission_name') {
+                return response()->json('Not Success, not match admission_name', 500);
+            } else {
+                $college = $this->colleage_student->editCollegeStudent($data);
+                if ($college == 'Fail') {
+                    return response()->json('Not Success, college student duplicate on file or do not have in admission', 500);
+                } else {
+                    $this->colleage_student->updateStatus($data);
+                    return response()->json('สำเร็จ', 200);
+                }
+            }
         }
+
+
 
         $this->colleage_student->editCollegeStudent($data);
         return response()->json('สำเร็จ', 200);

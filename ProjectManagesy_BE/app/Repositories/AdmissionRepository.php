@@ -198,9 +198,16 @@ class AdmissionRepository implements AdmissionRepositoryInterface
             ]);
         }
 
-        $college_student = CollegeStudent::all();
+        $college_student = CollegeStudentFile::all();
         foreach ($college_student as $value) {
-            $check_college = CollegeStudentFile::where('college_student_id', $value['college_student_id'])->first();
+            $check_college_student = AdmissionFile::where('data_id', $value['data_id'])->first();
+            if (!$check_college_student) {
+                CollegeStudentFile::where('data_id', $value['data_id'])->delete();
+            }
+        }
+        $college = CollegeStudent::all();
+        foreach ($college as $value) {
+            $check_college = CollegeStudentFile::where('college_student_id', $value['college_student_id']);
             if (!$check_college) {
                 CollegeStudent::where('college_student_id', $value['college_student_id'])->delete();
             }

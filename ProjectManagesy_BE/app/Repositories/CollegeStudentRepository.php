@@ -115,11 +115,23 @@ class CollegeStudentRepository implements CollegeStudentRepositoryInterface
 
     public function chcekStatus($data)
     {
-        // Str::lower($test);
         foreach ($data['college_student_file'] as $value) {
-            $admission = AdmissionFile::where('data_id', $value['data_id'])->where('admission_name', $value['data_admission'])->first();
-            if ($admission->status != 5) {
-                $status = 'false';
+            $lower = Str::lower($value['data_admission']);
+            $data_admission = str_replace(' ', '', $lower);
+            $admission = AdmissionFile::where('data_id', $value['data_id'])->first();
+            $admission_name_EI = $admission->admission_name;
+            $lower_admission = Str::lower($admission_name_EI);
+            $lower_admission_trim = str_replace(' ', '', $lower_admission);
+            if ($lower_admission_trim == $data_admission && $value['data_id'] == $admission->data_id) {
+                if ($admission->status == 5 || $admission->status == 6) {
+                    $status = 'true';
+                    return $status;
+                } else if ($admission->status != 5) {
+                    $status = 'false_status';
+                    return $status;
+                }
+            } else {
+                $status = 'false_admission_name';
                 return $status;
             }
         }
